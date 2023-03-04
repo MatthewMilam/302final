@@ -1,0 +1,16 @@
+body {
+   margin: 0;
+   padding: 0;
+}
+
+.headerContainer {
+   display: flex;
+   justify-content: center;
+   font-size: 3rem;
+}
+
+.buttonContainer {
+   background-color: lightgray;
+   width: 20%;
+   margin-inline: 1rem;
+}
