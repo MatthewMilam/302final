@@ -1,23 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" href="index.css">
-   <title>Lame-O-Ball</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Lame-O-Ball</title>
 </head>
 <body>
-   <div class="headerContainer">
-      <div class="buttonContainer">
-         <p>Lame-O-Ball</p>
-      </div>
-      <div class="buttonContainer">
-         <p>Score</p>
-      </div>
-      <div class="buttonContainer">
-         <p>New Game</p>
-      </div>
-   </div>
+    <div class="headerContainer">
+        <p style="font-size: 3rem;">Lame-O-Ball</p>
+        <div class="buttonContainer">
+            <button>Score</button>
+        </div>
+        <div class="buttonContainer">
+            <button style="font-size: 1.6rem;">New Game</button>
+        </div>
+    </div>
+    <div class="playContainer">
+        <div class="gridContainer">
+            <button id="gridItemTemplate"></button>
+        </div>
+        <div class="sidebarContainer">
+            <p>Score: </p>
+            <button>Collect</button>
+        </div>
+    </div>
+    <div class="footerContainer">
+        <p>HOW TO PLAY: Click to swap the cells, and after the swap, five new random cells will be filled with random colors.
+        The goal is to achieve the highest possible score. To add to your score you can click a goal cell (the special highlighted cell)
+        and hit collect. Every adjacent color will be removed and subsequently added to your score, but there must be a minimum of 5 connected cells.
+       </p> 
+    </div>
+    <script src="lameoball.js"></script>
 </body>
 </html>
