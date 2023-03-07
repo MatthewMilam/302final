@@ -37,10 +37,15 @@ p {
 	grid-template-columns: repeat(10, 1fr);
 }
 
-#gridItemTemplate {
+.gridItemTemplate {
 	background-color: rgb(183, 183, 183);
+	border-color: darkgray;
 	width: 40px;
 	height: 40px;
+}
+
+.gridGoal {
+	border-color: gold;
 }
 
 .gridItem {

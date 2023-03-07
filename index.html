@@ -14,16 +14,16 @@
             <button>Score</button>
         </div>
         <div class="buttonContainer">
-            <button style="font-size: 1.6rem;">New Game</button>
+            <button style="font-size: 1.6rem;" onclick="ClearBoard()">New Game</button>
         </div>
     </div>
     <div class="playContainer">
         <div class="gridContainer">
-            <button id="gridItemTemplate"></button>
+            <button class="gridItemTemplate" id="gridItemTemplate" onclick="SetSwap(this.id)"></button>
         </div>
         <div class="sidebarContainer">
             <p>Score: </p>
-            <button>Collect</button>
+            <button onclick="SpawnSquares()">Collect</button>
         </div>
     </div>
     <div class="footerContainer">
