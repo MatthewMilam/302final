@@ -1,1 +1,5 @@
 # 302final
+
+
+# GOALS
+# 

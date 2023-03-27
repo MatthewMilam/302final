@@ -1,3 +1,26 @@
+/* What to get done
+1. Finish superball functions
+   - add 5 different colors (get random color), function to select random color (rpbgy) MATTHEW
+   - Swapping fix (shouldn't be able to swap any non-colored squares) BRYCE
+   - fix collect button to hold a collect function - make collect have to be called on goal cell. MATTHEW
+   - make collect reset the first swap (so you cant swap, collect and swap) BRYCE
+   - add inability to swap same color. MATTHEW
+2. Disjoint sets
+   - Adding disjoint sets
+   - Actually using disjoint sets in functions.
+   - Scoring function, (related) is ending the game when no swaps / scores possible.
+3. Invent 2 player version
+3.5 Actually code the 2 player version
+4. Ai easy
+5. Ai hard
+*/
+
+/*
+Due Dates:
+
+
+*/
+
 // File holding logic for lame-o-ball game
 
 let boardAr = new Array(80);
@@ -6,7 +29,7 @@ for(let i=0; i < 80; i++) {
     emptySet.push(i);
 }
 
-//memory for swapping squares
+// Global variables for swap function.
 let firstSquare = -1;
 let secondSquare = -1;
 
@@ -63,7 +86,7 @@ function SetSwap(id) {
 
 function SpawnSquares() {
     for(let i=0;i < 5; i++) {
-        const intPos = Math.floor(Math.random() * emptySet.length);
+        const intPos = Math.floor(Math.random() * (emptySet.length));
         const intPosNum = emptySet[intPos]; 
         document.querySelector('#gridItem' + intPosNum).style.backgroundColor = "red";
         emptySet.splice(intPos, 1);
@@ -87,7 +110,8 @@ SpawnSquares();
 //     SpawnSquares();
 // }
 
-// checking if any  blank squares
-for (let i=0; i < 80; i++) {
 
+
+function GameOver() {
+        
 }
