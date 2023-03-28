@@ -45,13 +45,18 @@ p {
 }
 
 .gridGoal {
-	border-color: gold;
+	border-color: black;
+	border-radius: 16px;
 }
 
 .gridItem {
 	background-color: rgb(183, 183, 183);
 	width: 40px;
 	height: 40px;
+}
+
+.highlightedItem {
+	
 }
 
 .playContainer {

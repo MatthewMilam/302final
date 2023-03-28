@@ -1,6 +1,6 @@
 /* What to get done
 1. Finish superball functions
-   - add 5 different colors (get random color), function to select random color (rpbgy) MATTHEW
+   - add 5 different colors (get random color), function to select random color (rpbgy) MATTHEW (done)
    - Swapping fix (shouldn't be able to swap any non-colored squares) BRYCE
    - fix collect button to hold a collect function - make collect have to be called on goal cell. MATTHEW
    - make collect reset the first swap (so you cant swap, collect and swap) BRYCE
@@ -23,11 +23,19 @@ Due Dates:
 
 // File holding logic for lame-o-ball game
 
+
+// Initialize global variables
 let boardAr = new Array(80);
+let filledSquares = 0;
+let mss = 5;
+let score = 0;
+let colorArray = ["gainsboro", "crimson", "aqua", "chartreuse", "yellow", "darkorchid"];
 let emptySet = [];
-for(let i=0; i < 80; i++) {
-    emptySet.push(i);
+for (let i = 0; i < 80; i++) {
+    emptySet[i] = i;
 }
+
+
 
 // Global variables for swap function.
 let firstSquare = -1;
@@ -45,10 +53,13 @@ elem.remove();
 
 //Create goal cells
 for(let i=20; i < 60; i++) {
-    if((i%10) == 0 | (i%10) == 1 | (i%10) == 8 | (i%10) == 9) {
+    if(IsGoalCell(i)) {
         document.querySelector('#gridItem'+i).classList.add("gridGoal");
     }
 }
+
+
+// End of global variabels
 
 function SwapSquares(firstSquareInput, secondSquareInput) {
     let tempSetting = document.querySelector('#gridItem' + firstSquareInput).style.backgroundColor;
@@ -66,6 +77,7 @@ function SetSwap(id) {
             firstSquare = id.slice(-1);
             console.log(firstSquare)
         }
+        document.querySelector('#gridItem' + firstSquare).classList.add("highlightedItem");
     }
     else if(secondSquare == -1) {
         if(id.length == 10) {
@@ -84,34 +96,63 @@ function SetSwap(id) {
 }
 
 
+
 function SpawnSquares() {
     for(let i=0;i < 5; i++) {
-        const intPos = Math.floor(Math.random() * (emptySet.length));
-        const intPosNum = emptySet[intPos]; 
-        document.querySelector('#gridItem' + intPosNum).style.backgroundColor = "red";
-        emptySet.splice(intPos, 1);
-        boardAr[intPosNum] = 5;
+        const intPos = Math.floor(Math.random() * emptySet.length);
+        const randomColor = Math.floor(Math.random() * 5) + 1;
+        console.log(randomColor);
+        document.querySelector('#gridItem' + emptySet[intPos]).style.backgroundColor = colorArray[randomColor];
+        // emptySet.splice(intPos, 1);
+        boardAr[emptySet[intPos]] = randomColor;
+        // TODO: remove intPos indexed element from emptySet array
+    
     }
+
+    firstSqure = -1;
 }
 
-function ClearBoard() {
+function NewGame() {
     emptySet.length = 0;
     for(let i=0; i < 80; i++) {
         boardAr[i] = 0;
         emptySet.push(i);
         document.querySelector('#gridItem' + i).style.backgroundColor = "lightgray";
     }
+    
+    SpawnSquares();
 }
 
-SpawnSquares();
-// Loop repeats every turn. Finds 5 random blank squares and makes them a random color. Takes in input from the user.
-// console.log('#gridItem' + console.log(Math.floor(Math.random() * 80)));
-// for(let i=0; i < 5; i++) {
-//     SpawnSquares();
-// }
+function Collect() {
+    if (firstSquare > -1 && true /* also add check for disjoint set size >= mss*/ && IsGoalCell(firstSquare)) { // calls collect
+        // Requires disjoint set
+        firstSquare = -1;
+    }
+    else if (firstSquare == -1){
+        
+    }
+    else if (false /*check disjoint set size*/) {
 
+    }
+    else if (!IsGoalCell(firstSquare)) {
 
+    }
+
+    // TODO: decrement filledSquares by how big the disjoint set was.
+    // TODO: increment score
+}
+
+function IsGoalCell(int) {
+    if((int%10) == 0 | (int%10) == 1 | (int%10) == 8 | (int%10) == 9) {
+        return true;
+    }
+    return false;
+}
 
 function GameOver() {
         
 }
+
+// Main area
+SpawnSquares(); // spawns squares the first 
+filledSquares += 5;
