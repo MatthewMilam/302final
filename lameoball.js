@@ -91,21 +91,21 @@ export default class SuperballBoard {
     
         //change JS data
         let tempVar = this.boardAr[firstSquareInput];
-        this.boardAr[firstSquareInput] = boardAr[secondSquareInput];
+        this.boardAr[firstSquareInput] = this.boardAr[secondSquareInput];
         this.boardAr[secondSquareInput] = tempVar;
     }
     
-    SetSwap(id, firstSquare, secondSquare) {
+    SetSwap(id) {
         if(this.firstSquare == -1 && this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.firstSquare = id;
             document.getElementById(this.firstSquare).classList.add("highlightedItem");
         }
         else if(this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.secondSquare = id;
-            SwapSquares(this.firstSquare, this.secondSquare);
+            this.SwapSquares(this.firstSquare, this.secondSquare);
             document.getElementById(this.firstSquare).classList.remove("highlightedItem");
-            firstSquare = -1;
-            secondSquare = -1;
+            this.firstSquare = -1;
+            this.secondSquare = -1;
         }
         else {
             console.log("Give a warning message to user");
@@ -116,7 +116,6 @@ export default class SuperballBoard {
         for(let i=0;i < 5; i++) {
             const intPos = Math.floor(Math.random() * this.emptySet.length);
             const randomColor = Math.floor(Math.random() * 5) + 1;
-            console.log(randomColor);
             document.getElementById(this.emptySet[intPos]).style.backgroundColor = this.colorArray[randomColor];
             // emptySet.splice(intPos, 1);
             this.boardAr[this.emptySet[intPos]] = randomColor;
@@ -138,6 +137,13 @@ export default class SuperballBoard {
         
         SpawnSquares();
     }
+
+    IsGoalCell(int) {
+        if((int % 10) === 0 || (int % 10) === 1 || (int % 10) === 8 || (int % 10) === 9) {
+            return true;
+        }
+        return false;
+    }
     
     Collect() {
         if (this.firstSquare > -1 && true /* also add check for disjoint set size >= mss*/ && this.IsGoalCell(this.firstSquare)) { // calls collect
@@ -156,13 +162,6 @@ export default class SuperballBoard {
     
         // TODO: decrement filledSquares by how big the disjoint set was.
         // TODO: increment score
-    }
-    
-    IsGoalCell(int) {
-        if((int % 10) === 0 || (int % 10) === 1 || (int % 10) === 8 || (int % 10) === 9) {
-            return true;
-        }
-        return false;
     }
     
     GameOver() {

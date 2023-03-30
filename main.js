@@ -40,24 +40,24 @@ board.filledSquares += 5;
 //add buttons event listeners to call functions when clicked
 document.addEventListener('DOMContentLoaded', () => {
     const SpawnSquaresButton = document.getElementById('SpawnSquaresButton');
-    SpawnSquaresButton.addEventListener('click', board.SpawnSquares);
+    SpawnSquaresButton.addEventListener('click', board.SpawnSquares.bind(board));
 });
 
 document.addEventListener('DOMContentLoaded', () => {
     const NewGameButton = document.getElementById('NewGameButton');
-    NewGameButton.addEventListener('click', board.NewGame);
+    NewGameButton.addEventListener('click', board.NewGame.bind(board));
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    const SquareButtons = document.getElementByClass('gridItemTemplate');
-    SquareButtons.forEach(element => {
-        element.addEventListener('click', board.SetSwap(element.id));
+    const SquareButtons = Array.from(document.getElementsByClassName('gridItemTemplate'));
+    SquareButtons.forEach((element) => {
+        element.addEventListener('click', () => board.SetSwap(element.id));
     });
 });
 
 document.addEventListener('DOMContentLoaded', () => {
     const CollectButton = document.getElementById('CollectButton');
-    CollectButton.addEventListener('click', board.Collect);
+    CollectButton.addEventListener('click', board.Collect.bind(board));
 });
 //Disjoint set code
 import DisjSet from './disjoint.js';
