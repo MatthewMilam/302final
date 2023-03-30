@@ -25,134 +25,147 @@ Due Dates:
 
 
 // Initialize global variables
-let boardAr = new Array(80);
-let filledSquares = 0;
-let mss = 5;
-let score = 0;
-let colorArray = ["gainsboro", "crimson", "aqua", "chartreuse", "yellow", "darkorchid"];
-let emptySet = [];
-for (let i = 0; i < 80; i++) {
-    emptySet[i] = i;
-}
+// let boardAr = new Array(80);
+// let filledSquares = 0;
+// let mss = 5;
+// let score = 0;
+// let colorArray = ["gainsboro", "darkorchid", "aqua", "yellow", "crimson", "chartreuse"];
+// let scoreArray = [0, 2, 3, 4, 5, 6];
+// let emptySet = [];
+// for (let i = 0; i < 80; i++) {
+//     emptySet[i] = i;
+//     boardAr[i] = 0;
+// }
 
 
 
-// Global variables for swap function.
-let firstSquare = -1;
-let secondSquare = -1;
+// // Global variables for swap function.
+// let firstSquare = -1;
+// let secondSquare = -1;
 
-// Colors: White(1), Purple(2), Blue(3), Yellow(4), Red(5), Green(6)
-var elem = document.querySelector('#gridItemTemplate');
-for (let i = 0; i < 80; i++) {
-    boardAr[i] = 0;
-    var clone = elem.cloneNode(true);
-    clone.id = ('gridItem' + (79 - i ));
-    elem.after(clone);
-}
-elem.remove();
+// // Colors: White(1), Purple(2), Blue(3), Yellow(4), Red(5), Green(6)
+// var elem = document.querySelector('.gridItemTemplate');
+// for (let i = 0; i < 80; i++) {
+//     boardAr[i] = 0;
+//     var clone = elem.cloneNode(true);
+//     clone.id = ((79 - i));
+//     elem.after(clone);
+// }
+// elem.remove();
 
-//Create goal cells
-for(let i=20; i < 60; i++) {
-    if(IsGoalCell(i)) {
-        document.querySelector('#gridItem'+i).classList.add("gridGoal");
-    }
-}
+// //Create goal cells
+// for(let i=20; i < 60; i++) {
+//     if(IsGoalCell(i)) {
+//         document.getElementById(i).classList.add("gridGoal");
+//     }
+// }
 
 
-// End of global variabels
-
-function SwapSquares(firstSquareInput, secondSquareInput) {
-    let tempSetting = document.querySelector('#gridItem' + firstSquareInput).style.backgroundColor;
-    document.querySelector('#gridItem' + firstSquareInput).style.backgroundColor = document.querySelector('#gridItem' + secondSquareInput).style.backgroundColor;
-    document.querySelector('#gridItem' + secondSquareInput).style.backgroundColor = tempSetting;
-}
-
-function SetSwap(id) {
-    if(firstSquare == -1 && secondSquare == -1) {
-        console.log(id.length == 10);
-        if(id.length == 10) {
-            firstSquare = id.slice(-2);
+// End of global variables
+export default class SuperballBoard {
+    constructor() {
+        this.boardAr = [];
+        this.emptySet = [];
+        // this.boardAr = new Array(80);
+        // this.emptySet = new Array(80);
+        this.filledSquares = 0;
+        this.mss = 5;
+        this.score = 0;
+        this.colorArray = ["gainsboro", "darkorchid", "aqua", "yellow", "crimson", "chartreuse"];
+        this.scoreArray = [0, 2, 3, 4, 5, 6];
+        this.firstSquare = -1;
+        this.secondSquare = -1;
+        for (let i = 0; i < 80; i++) {
+            this.emptySet.push(i);
+            this.boardAr.push(0);
+            // this.emptySet[i] = i;
+            // this.boardAr[i] = 0;
         }
-        else {
-            firstSquare = id.slice(-1);
-            console.log(firstSquare)
-        }
-        document.querySelector('#gridItem' + firstSquare).classList.add("highlightedItem");
     }
-    else if(secondSquare == -1) {
-        if(id.length == 10) {
-            secondSquare = id.slice(-2);
-        }
-        else {
-            secondSquare = id.slice(-1);
-        }
-        SwapSquares(firstSquare, secondSquare);
-        firstSquare = -1;
-        secondSquare = -1;
-    }
-    else {
-        console.log("you shouldn't be here");
-    }
-}
 
-
-
-function SpawnSquares() {
-    for(let i=0;i < 5; i++) {
-        const intPos = Math.floor(Math.random() * emptySet.length);
-        const randomColor = Math.floor(Math.random() * 5) + 1;
-        console.log(randomColor);
-        document.querySelector('#gridItem' + emptySet[intPos]).style.backgroundColor = colorArray[randomColor];
-        // emptySet.splice(intPos, 1);
-        boardAr[emptySet[intPos]] = randomColor;
-        // TODO: remove intPos indexed element from emptySet array
+    SwapSquares(firstSquareInput, secondSquareInput) {
+        //change HTML
+        let tempSetting = document.getElementById(firstSquareInput).style.backgroundColor;
+        document.getElementById(firstSquareInput).style.backgroundColor = document.getElementById(secondSquareInput).style.backgroundColor;
+        document.getElementById(secondSquareInput).style.backgroundColor = tempSetting;
     
-    }
-
-    firstSqure = -1;
-}
-
-function NewGame() {
-    emptySet.length = 0;
-    for(let i=0; i < 80; i++) {
-        boardAr[i] = 0;
-        emptySet.push(i);
-        document.querySelector('#gridItem' + i).style.backgroundColor = "lightgray";
+        //change JS data
+        let tempVar = this.boardAr[firstSquareInput];
+        this.boardAr[firstSquareInput] = boardAr[secondSquareInput];
+        this.boardAr[secondSquareInput] = tempVar;
     }
     
-    SpawnSquares();
-}
-
-function Collect() {
-    if (firstSquare > -1 && true /* also add check for disjoint set size >= mss*/ && IsGoalCell(firstSquare)) { // calls collect
-        // Requires disjoint set
-        firstSquare = -1;
+    SetSwap(id, firstSquare, secondSquare) {
+        if(this.firstSquare == -1 && this.secondSquare == -1 && this.boardAr[id] != 0) {
+            this.firstSquare = id;
+            document.getElementById(this.firstSquare).classList.add("highlightedItem");
+        }
+        else if(this.secondSquare == -1 && this.boardAr[id] != 0) {
+            this.secondSquare = id;
+            SwapSquares(this.firstSquare, this.secondSquare);
+            document.getElementById(this.firstSquare).classList.remove("highlightedItem");
+            firstSquare = -1;
+            secondSquare = -1;
+        }
+        else {
+            console.log("Give a warning message to user");
+        }
     }
-    else if (firstSquare == -1){
+    
+    SpawnSquares() {
+        for(let i=0;i < 5; i++) {
+            const intPos = Math.floor(Math.random() * this.emptySet.length);
+            const randomColor = Math.floor(Math.random() * 5) + 1;
+            console.log(randomColor);
+            document.getElementById(this.emptySet[intPos]).style.backgroundColor = this.colorArray[randomColor];
+            // emptySet.splice(intPos, 1);
+            this.boardAr[this.emptySet[intPos]] = randomColor;
+            // TODO: remove intPos indexed element from emptySet array
+            this.emptySet.splice(intPos, 1);
         
+        }
+    
+        this.firstSquare = -1;
     }
-    else if (false /*check disjoint set size*/) {
-
-    }
-    else if (!IsGoalCell(firstSquare)) {
-
-    }
-
-    // TODO: decrement filledSquares by how big the disjoint set was.
-    // TODO: increment score
-}
-
-function IsGoalCell(int) {
-    if((int%10) == 0 | (int%10) == 1 | (int%10) == 8 | (int%10) == 9) {
-        return true;
-    }
-    return false;
-}
-
-function GameOver() {
+    
+    NewGame() {
+        emptySet.length = 0;
+        for(let i=0; i < 80; i++) {
+            this.boardAr[i] = 0;
+            emptySet.push(i);
+            document.querySelector(i).style.backgroundColor = "lightgray";
+        }
         
+        SpawnSquares();
+    }
+    
+    Collect() {
+        if (this.firstSquare > -1 && true /* also add check for disjoint set size >= mss*/ && this.IsGoalCell(this.firstSquare)) { // calls collect
+            // Requires disjoint set
+            this.firstSquare = -1;
+        }
+        else if (this.firstSquare == -1){
+            
+        }
+        else if (false /*check disjoint set size*/) {
+    
+        }
+        else if (!this.IsGoalCell(this.firstSquare)) {
+        
+        }
+    
+        // TODO: decrement filledSquares by how big the disjoint set was.
+        // TODO: increment score
+    }
+    
+    IsGoalCell(int) {
+        if((int % 10) === 0 || (int % 10) === 1 || (int % 10) === 8 || (int % 10) === 9) {
+            return true;
+        }
+        return false;
+    }
+    
+    GameOver() {
+            
+    }
 }
-
-// Main area
-SpawnSquares(); // spawns squares the first 
-filledSquares += 5;

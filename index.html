@@ -23,17 +23,17 @@
             <button>Score</button>
         </div>
         <div class="buttonContainer">
-            <button style="font-size: 1.6rem;" onclick="NewGame()">New Game</button>
+            <button style="font-size: 1.6rem;" id="NewGameButton">New Game</button>
         </div>
     </div>
     <div class="playContainer">
         <div class="gridContainer">
-            <button class="gridItemTemplate" id="gridItemTemplate" onclick="SetSwap(this.id)"></button>
+            <button class="gridItemTemplate" id=""></button>
         </div>
         <div class="sidebarContainer">
             <p>Score: </p>
-            <button onclick="SpawnSquares()">Spawn Squares</button>
-            <button onclick="Collect()">Collect</button>
+            <button id="SpawnSquaresButton">Spawn Squares</button>
+            <button id="CollectButton">Collect</button>
         </div>
     </div>
     <div class="footerContainer">
@@ -42,6 +42,8 @@
         and hit collect. Every adjacent color will be removed and subsequently added to your score, but there must be a minimum of 5 connected cells.
        </p> 
     </div>
-    <script src="lameoball.js"></script>
+    <script type="module" src="lameoball.js"></script>
+    <script type="module" src="disjoint.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
