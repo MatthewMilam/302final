@@ -21,7 +21,7 @@ var elem = document.querySelector('.gridItemTemplate');
 for (let i = 0; i < 80; i++) {
     board.boardAr[i] = 0;
     var clone = elem.cloneNode(true);
-    clone.id = ((79 - i));
+    clone.dataset.number = ((80 - i));
     elem.after(clone);
 }
 elem.remove();
@@ -29,7 +29,7 @@ elem.remove();
 //Create goal cells
 for(let i=20; i < 60; i++) {
     if(board.IsGoalCell(i)) {
-        document.getElementById(i).classList.add("gridGoal");
+      document.querySelector(`[data-number="${i}"]`).classList.add("gridGoal");
     }
 }
 
