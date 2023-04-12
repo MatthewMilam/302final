@@ -86,7 +86,7 @@ export default class SuperballBoard {
     SwapSquares(firstSquareInput, secondSquareInput) {
         //change HTML
         let tempSetting = document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor;
-        document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor = document.querySelector(`[data-number="${secondSquareInput}]`).style.backgroundColor;
+        document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor = document.querySelector(`[data-number="${secondSquareInput}"]`).style.backgroundColor;
         document.querySelector(`[data-number="${secondSquareInput}"]`).style.backgroundColor = tempSetting;
     
         //change JS data
@@ -98,14 +98,16 @@ export default class SuperballBoard {
     SetSwap(id) {
         if(this.firstSquare == -1 && this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.firstSquare = id;
+            console.log(id);
             document.querySelector(`[data-number="${this.firstSquare}"]`).classList.add("highlightedItem");
         }
         else if(this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.secondSquare = id;
             this.SwapSquares(this.firstSquare, this.secondSquare);
-            document.querySelector(`[data-number="${this.firstSquare}]"`).classList.remove("highlightedItem");
+            document.querySelector(`[data-number="${this.firstSquare}"]`).classList.remove("highlightedItem");
             this.firstSquare = -1;
             this.secondSquare = -1;
+            this.SpawnSquares();
         }
         else {
             console.log("Give a warning message to user");
@@ -117,7 +119,6 @@ export default class SuperballBoard {
             const intPos = Math.floor(Math.random() * this.emptySet.length);
             const randomColor = Math.floor(Math.random() * 5) + 1;
             document.querySelector(`[data-number="${this.emptySet[intPos]}"`).style.backgroundColor = this.colorArray[randomColor];
-            // emptySet.splice(intPos, 1);
             this.boardAr[this.emptySet[intPos]] = randomColor;
             // TODO: remove intPos indexed element from emptySet array
             this.emptySet.splice(intPos, 1);
@@ -132,10 +133,10 @@ export default class SuperballBoard {
         for(let i=0; i < 80; i++) {
             this.boardAr[i] = 0;
             this.emptySet.push(i);
-            document.querySelector(`[data-number="${i}"`).style.backgroundColor = "lightgray";
+            document.querySelector(`[data-number="${i}"]`).style.backgroundColor = "lightgray";
         }
         
-        SpawnSquares();
+        this.SpawnSquares();
     }
 
     IsGoalCell(int) {
@@ -151,7 +152,7 @@ export default class SuperballBoard {
             this.firstSquare = -1;
         }
         else if (this.firstSquare == -1){
-            
+            console.log("Give a warning message to user");
         }
         else if (false /*check disjoint set size*/) {
     

@@ -21,7 +21,7 @@ var elem = document.querySelector('.gridItemTemplate');
 for (let i = 0; i < 80; i++) {
     board.boardAr[i] = 0;
     var clone = elem.cloneNode(true);
-    clone.dataset.number = ((80 - i));
+    clone.dataset.number = ((79 - i));
     elem.after(clone);
 }
 elem.remove();
@@ -29,6 +29,8 @@ elem.remove();
 //Create goal cells
 for(let i=20; i < 60; i++) {
     if(board.IsGoalCell(i)) {
+      console.log(i)
+      // console.log(document.querySelector(`[data-number="${i}"]`));
       document.querySelector(`[data-number="${i}"]`).classList.add("gridGoal");
     }
 }
@@ -51,7 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     const SquareButtons = Array.from(document.getElementsByClassName('gridItemTemplate'));
     SquareButtons.forEach((element) => {
-        element.addEventListener('click', () => board.SetSwap(element.id));
+        element.addEventListener('click', (event) => {
+            const dataNumber = element.getAttribute('data-number');
+            board.SetSwap(dataNumber);
+
+        });
     });
 });
 
@@ -59,6 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const CollectButton = document.getElementById('CollectButton');
     CollectButton.addEventListener('click', board.Collect.bind(board));
 });
+
+
 //Disjoint set code
 import DisjSet from './disjoint.js';
 
