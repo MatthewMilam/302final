@@ -1,15 +1,42 @@
+// Disjset holds the disjoint set as well as the sizes array.
+
 export default class DisjSet {
     constructor(n) {
         //TODO: Add superball variables in the constructor
         this.rank = new Array(n);
         this.parent = new Array(n);
         this.n = n;
+
+        // Matthew code
+        this.sizes = new Array(n);
+        // end of matthew's code
+
         this.makeSet();
     }
  
+    decodePrint() {
+        for (let i = 0; i < 80; i++) {
+            console.log(this.parent[i]);
+        }
+    }
+
+    getParentSize(n) {
+        let size = this.sizes[n];
+
+        while (size == 0) {
+            n = this.parent[n];
+            size = this.sizes[n];
+        }
+
+        return size;
+    }
+
     makeSet() {
         for (let i = 0; i < this.n; i++) {
             this.parent[i] = i;
+
+            // matthew code
+            this.sizes[i] = 1;
         }
     }
  
@@ -28,28 +55,17 @@ export default class DisjSet {
  
         if (this.rank[xset] < this.rank[yset]) {
             this.parent[xset] = yset;
+            this.sizes[yset] += this.sizes[xset];
+            this.sizes[xset] = 0;
         } else if (this.rank[xset] > this.rank[yset]) {
             this.parent[yset] = xset;
+            this.sizes[xset] += this.sizes[yset];
+            this.sizes[yset] = 0;
         } else {
             this.parent[yset] = xset;
+            this.sizes[xset] += this.sizes[yset];
+            this.sizes[yset] = 0;
             this.rank[xset] = this.rank[xset] + 1;
         }
     }
-}
- 
-// usage example
-let obj = new DisjSet(5);
-obj.Union(0, 2);
-obj.Union(4, 2);
-obj.Union(3, 1);
- 
-if (obj.find(4) === obj.find(0)) {
-  console.log("Yes");
-} else {
-  console.log("No");
-}
-if (obj.find(1) === obj.find(0)) {
-  console.log("Yes");
-} else {
-  console.log("No");
 }

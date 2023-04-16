@@ -29,7 +29,7 @@ elem.remove();
 //Create goal cells
 for(let i=20; i < 60; i++) {
     if(board.IsGoalCell(i)) {
-      console.log(i)
+      //console.log(i)
       // console.log(document.querySelector(`[data-number="${i}"]`));
       document.querySelector(`[data-number="${i}"]`).classList.add("gridGoal");
     }
@@ -37,7 +37,6 @@ for(let i=20; i < 60; i++) {
 
 
 board.SpawnSquares(); // spawns squares the first 
-board.filledSquares += 5;
 
 //add buttons event listeners to call functions when clicked
 document.addEventListener('DOMContentLoaded', () => {
@@ -65,27 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const CollectButton = document.getElementById('CollectButton');
     CollectButton.addEventListener('click', board.Collect.bind(board));
 });
-
-
-//Disjoint set code
-import DisjSet from './disjoint.js';
-
-const disjointSet = new DisjSet(80);
-disjointSet.Union(0, 2);
-disjointSet.Union(4, 2);
-disjointSet.Union(3, 1);
- 
-if (disjointSet.find(4) === disjointSet.find(0)) {
-  console.log("Yes");
-} else {
-  console.log("No");
-}
-if (disjointSet.find(1) === disjointSet.find(0)) {
-  console.log("Yes");
-} else {
-  console.log("No");
-}
-
 
 
 

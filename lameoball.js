@@ -1,8 +1,8 @@
 /* What to get done
 1. Finish superball functions
    - add 5 different colors (get random color), function to select random color (rpbgy) MATTHEW (done)
-   - Swapping fix (shouldn't be able to swap any non-colored squares) BRYCE
-   - fix collect button to hold a collect function - make collect have to be called on goal cell. MATTHEW
+   - Swapping fix (shouldn't be able to swap any non-colored squares) BRYCE (done)
+   - fix collect button to hold a collect function - make collect have to be called on goal cell. MATTHEW (done)
    - make collect reset the first swap (so you cant swap, collect and swap) BRYCE
    - add inability to swap same color. MATTHEW
 2. Disjoint sets
@@ -62,8 +62,12 @@ Due Dates:
 
 
 // End of global variables
+import DisjointSet, * as boardFile from './disjoint.js'
+
 export default class SuperballBoard {
     constructor() {
+        this.disjSet = new DisjointSet(80);
+
         this.boardAr = [];
         this.emptySet = [];
         // this.boardAr = new Array(80);
@@ -96,10 +100,18 @@ export default class SuperballBoard {
     }
     
     SetSwap(id) {
+        console.log(this.filledSquares);
         if(this.firstSquare == -1 && this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.firstSquare = id;
-            console.log(id);
+            //console.log(id);
             document.querySelector(`[data-number="${this.firstSquare}"]`).classList.add("highlightedItem");
+        }
+        else if(id == this.firstSquare
+                || document.querySelector(`[data-number="${this.firstSquare}"]`).style.backgroundColor
+                == document.querySelector(`[data-number="${id}"]`).style.backgroundColor) {
+            // Clicked a cell twice or second square is the same color as first square. Restarts swap process without spawning squares.
+            document.querySelector(`[data-number="${this.firstSquare}"]`).classList.remove("highlightedItem");
+            this.firstSquare = -1;
         }
         else if(this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.secondSquare = id;
@@ -107,29 +119,68 @@ export default class SuperballBoard {
             document.querySelector(`[data-number="${this.firstSquare}"]`).classList.remove("highlightedItem");
             this.firstSquare = -1;
             this.secondSquare = -1;
-            this.SpawnSquares();
+
+            if (this.GameOver()) {
+               this.NewGame();
+            }
+            else {
+                this.SpawnSquares();
+            }
+        
         }
         else {
             console.log("Give a warning message to user");
         }
     }
+
+    // Update Disjset is called everytime the turn ends (so at the end of spawnsquares()). 
+    updateDisjSet() {
+        delete this.disjSet;
+        this.disjSet = new DisjointSet(80);
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 10; j++) {
+                if (document.querySelector(`[data-number="${(i*10) + j}"]`).style.backgroundColor != "") {
+                    // Check right cell.
+                    if (j != 9 && this.disjSet.find((i*10) + j) != this.disjSet.find((i*10) + j + 1) &&
+                        document.querySelector(`[data-number="${(i*10) + j}"]`).style.backgroundColor ==
+                        document.querySelector(`[data-number="${(i*10) + j+1}"]`).style.backgroundColor) {
+                            this.disjSet.Union((i*10) + j, (i*10) + j + 1);
+                    }
+                    // Check below
+                    if (i < 7 && this.disjSet.find((i*10) + j) != this.disjSet.find(((i+1)*10) + j) &&
+                        document.querySelector(`[data-number="${(i*10) + j}"]`).style.backgroundColor ==
+                        document.querySelector(`[data-number="${((i+1)*10) + j}"]`).style.backgroundColor) {
+                            this.disjSet.Union((i*10) + j, ((i+1)*10) + j);
+                    }
+                }
+            }
+        }
+
+
+        //this.disjSet.decodePrint();
+    }
     
     SpawnSquares() {
-        for(let i=0;i < 5; i++) {
+        let numToSpawn = 5;
+        if (this.filledSquares > 75) numToSpawn = 80 - this.filledSquares;
+        for(let i=0; i < numToSpawn; i++) {
             const intPos = Math.floor(Math.random() * this.emptySet.length);
             const randomColor = Math.floor(Math.random() * 5) + 1;
             document.querySelector(`[data-number="${this.emptySet[intPos]}"`).style.backgroundColor = this.colorArray[randomColor];
             this.boardAr[this.emptySet[intPos]] = randomColor;
             // TODO: remove intPos indexed element from emptySet array
             this.emptySet.splice(intPos, 1);
-        
         }
     
         this.firstSquare = -1;
+        this.updateDisjSet();
+        this.filledSquares += 5;
     }
     
     NewGame() {
         this.emptySet.length = 0;
+        this.filledSquares = 0;
+        this.disjSet = new DisjointSet(80);
         for(let i=0; i < 80; i++) {
             this.boardAr[i] = 0;
             this.emptySet.push(i);
@@ -147,25 +198,61 @@ export default class SuperballBoard {
     }
     
     Collect() {
-        if (this.firstSquare > -1 && true /* also add check for disjoint set size >= mss*/ && this.IsGoalCell(this.firstSquare)) { // calls collect
-            // Requires disjoint set
+        if (this.firstSquare > -1 && this.disjSet.getParentSize(this.firstSquare) >= this.mss && this.IsGoalCell(this.firstSquare)) { // calls collect
+            // Squares are removed.
+            for (let i = 0; i < 80; i++) {
+                if (this.disjSet.find(i) == this.disjSet.find(this.firstSquare)) {
+                    document.querySelector(`[data-number="${i}"`).style.backgroundColor = "lightgray";
+                    this.boardAr[i] = 0;
+                    this.emptySet.push(i); // Question: does emptySet need to be in order? Right now it wont be.
+                    this.filledSquares--;
+                }
+            }
+            
+            document.querySelector(`[data-number="${this.firstSquare}"]`).classList.remove("highlightedItem");
             this.firstSquare = -1;
+
+
+            this.SpawnSquares();
+
+            // Increment score:
         }
         else if (this.firstSquare == -1){
-            console.log("Give a warning message to user");
-        }
-        else if (false /*check disjoint set size*/) {
-    
+            console.log("Error: No square has been selected to score.");
         }
         else if (!this.IsGoalCell(this.firstSquare)) {
-        
+            console.log("Error: Player tried to score a non goal cell.");
+        }
+        else if (this.disjSet.getParentSize(this.firstSquare) < this.mss) {
+            console.log("Error: Size of disjoint set is less than 5.")
         }
     
-        // TODO: decrement filledSquares by how big the disjoint set was.
-        // TODO: increment score
     }
     
     GameOver() {
-            
+        if (this.filledSquares == 80) {
+            for (let i = 0; i < 80; i++) {
+                if (this.disjSet.getParentSize(this.firstSquare) >= this.mss) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
+
 }
+
+// Completed by Matthew on 4/15:
+// 1. Added error commands on score function
+// 2. Implemented disjoint set using geeksforgeeks code.
+// 3. Added sizes array to disjoint.js to help with keeping track of sizes of disjoint sets.
+// 4. Debugged setswap so that clicking the same square twice does not spawn squares.
+// 5. 
+
+// question: are we still using filledSquares? 
+// also: how does spawn squares work with less than 5 slots left? does game end or does the board fill?
+
+// Still todo
+// 1. Add increment score to score() function, show score on the page.
+// 2. End the game when necessary.
