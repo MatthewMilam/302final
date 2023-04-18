@@ -21,47 +21,6 @@ Due Dates:
 
 */
 
-// File holding logic for lame-o-ball game
-
-
-// Initialize global variables
-// let boardAr = new Array(80);
-// let filledSquares = 0;
-// let mss = 5;
-// let score = 0;
-// let colorArray = ["gainsboro", "darkorchid", "aqua", "yellow", "crimson", "chartreuse"];
-// let scoreArray = [0, 2, 3, 4, 5, 6];
-// let emptySet = [];
-// for (let i = 0; i < 80; i++) {
-//     emptySet[i] = i;
-//     boardAr[i] = 0;
-// }
-
-
-
-// // Global variables for swap function.
-// let firstSquare = -1;
-// let secondSquare = -1;
-
-// // Colors: White(1), Purple(2), Blue(3), Yellow(4), Red(5), Green(6)
-// var elem = document.querySelector('.gridItemTemplate');
-// for (let i = 0; i < 80; i++) {
-//     boardAr[i] = 0;
-//     var clone = elem.cloneNode(true);
-//     clone.id = ((79 - i));
-//     elem.after(clone);
-// }
-// elem.remove();
-
-// //Create goal cells
-// for(let i=20; i < 60; i++) {
-//     if(IsGoalCell(i)) {
-//         document.querySelector(`[data-number="${i).classList.add("gridGoal");
-//     }
-// }
-
-
-// End of global variables
 import DisjointSet, * as boardFile from './disjoint.js'
 
 export default class SuperballBoard {
@@ -216,6 +175,9 @@ export default class SuperballBoard {
             this.SpawnSquares();
 
             // Increment score:
+             
+            //change score variable
+            document.getElementById("scoreContainer").innerHTML = this.score;
         }
         else if (this.firstSquare == -1){
             console.log("Error: No square has been selected to score.");

@@ -12,22 +12,24 @@ p {
 
 .headerContainer {
 	display: flex;
-	justify-content: center;
 	align-items: center;
+
 }
 
 .buttonContainer {
-	margin: 1rem;
+	margin: .3rem;
 	background-color: lightgray;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	border-radius: 10px;
 	width: 20%;
-	font-size: 2rem;
-	height: 3rem;
+	font-size: 1rem;
+	height: 2rem;
 	/* margin-inline: 1rem; */
 	text-align: center;
+	display: flex;
+	flex-direction: column;
 }
 
 .gridContainer {
@@ -62,7 +64,25 @@ p {
 .playContainer {
 	display: flex;
 	justify-content: center;
-	padding-bottom: 10%;
+	padding-bottom: 5%;
+	flex-direction: column;
+	align-items: center;
+}
+
+#CollectButton {
+	width: 100%;
+	height: 3rem;
+	font-size: 200%;
+}
+
+#WarningMessage {
+	height: 3rem;
+	font-size: 200%;
+	opacity: 0;
+}
+
+#SpawnSquaresButton {
+	margin-top: 1rem;
 }
 
 .sidebarContainer {
@@ -70,15 +90,16 @@ p {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding-left: 1rem;
+	padding-top: 1rem;
 }
-
 
 .footerContainer {
 	background-color: lightgray;
 	height: 20%;
+	width: 50%;
 	display: flex;
 	justify-content: center;
+	margin-block: 3rem;
 	padding-block: 2rem;
 }
 
