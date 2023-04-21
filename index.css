@@ -77,7 +77,8 @@ p {
 
 #WarningMessage {
 	height: 3rem;
-	font-size: 200%;
+	font-size: 150%;
+	transition: opacity 1s;
 	opacity: 0;
 }
 

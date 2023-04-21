@@ -157,6 +157,16 @@ export default class SuperballBoard {
     }
     
     Collect() {
+        function displayWarningMessage(message) {
+            const warningMessageElement = document.getElementById("WarningMessage");
+            warningMessageElement.innerText = message;
+            warningMessageElement.style.opacity = 1;
+        
+            setTimeout(() => {
+                warningMessageElement.style.transition = 'opacity 1s linear 0s'; // Add this line
+                warningMessageElement.style.opacity = 0;
+            }, 1000);
+        }
         if (this.firstSquare > -1 && this.disjSet.getParentSize(this.firstSquare) >= this.mss && this.IsGoalCell(this.firstSquare)) { // calls collect
             // Squares are removed.
             for (let i = 0; i < 80; i++) {
@@ -180,13 +190,13 @@ export default class SuperballBoard {
             document.getElementById("scoreContainer").innerHTML = this.score;
         }
         else if (this.firstSquare == -1){
-            console.log("Error: No square has been selected to score.");
+            displayWarningMessage("Error: No square has been selected to score.");
         }
         else if (!this.IsGoalCell(this.firstSquare)) {
-            console.log("Error: Player tried to score a non goal cell.");
+            displayWarningMessage("Error: Player tried to score a non goal cell.");
         }
         else if (this.disjSet.getParentSize(this.firstSquare) < this.mss) {
-            console.log("Error: Size of disjoint set is less than 5.")
+            displayWarningMessage("Error: Size of disjoint set is less than 5.")
         }
     
     }
