@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
 // Main area - moved to main.js commenting out for now
 // SpawnSquares(); // spawns squares the first 
 // filledSquares += 5;

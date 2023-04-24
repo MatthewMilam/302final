@@ -38,6 +38,7 @@ export default class SuperballBoard {
         this.scoreArray = [0, 2, 3, 4, 5, 6];
         this.firstSquare = -1;
         this.secondSquare = -1;
+        this.highlightedID = -1;
         for (let i = 0; i < 80; i++) {
             this.emptySet.push(i);
             this.boardAr.push(0);
@@ -46,10 +47,29 @@ export default class SuperballBoard {
         }
     }
 
+    ChangeHighlight(id) {
+        const element = document.querySelector(`[data-number="${id}"]`);
+        const originalColor = getComputedStyle(element).backgroundColor;
+        const colorArr = originalColor.substring(4, originalColor.length - 1).split(",").map(n => parseInt(n, 10));
+        const [r, g, b] = colorArr;
+        console.log(this.highlightedID);
+        if(this.highlightedID == -1) {
+            this.highlightedID = id;
+            const darkerColor = `rgb(${Math.max(r - 100, 0)}, ${Math.max(g - 100, 0)}, ${Math.max(b - 100, 0)})`;
+            console.log(darkerColor);
+            element.style.backgroundColor = darkerColor;
+        }
+        else {
+            this.highlightedID = -1;
+            element.style.backgroundColor = this.colorArray[this.boardAr[id]];
+        }
+    }
+
     SwapSquares(firstSquareInput, secondSquareInput) {
         //change HTML
-        let tempSetting = document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor;
-        document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor = document.querySelector(`[data-number="${secondSquareInput}"]`).style.backgroundColor;
+        let tempSetting = this.colorArray[this.boardAr[firstSquareInput]];
+        console.log(tempSetting);
+        document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor = this.colorArray[this.boardAr[secondSquareInput]];
         document.querySelector(`[data-number="${secondSquareInput}"]`).style.backgroundColor = tempSetting;
     
         //change JS data
@@ -59,23 +79,23 @@ export default class SuperballBoard {
     }
     
     SetSwap(id) {
-        console.log(this.filledSquares);
+        //both not selected
         if(this.firstSquare == -1 && this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.firstSquare = id;
             //console.log(id);
-            document.querySelector(`[data-number="${this.firstSquare}"]`).classList.add("highlightedItem");
+            this.ChangeHighlight(this.firstSquare);
         }
-        else if(id == this.firstSquare
-                || document.querySelector(`[data-number="${this.firstSquare}"]`).style.backgroundColor
-                == document.querySelector(`[data-number="${id}"]`).style.backgroundColor) {
-            // Clicked a cell twice or second square is the same color as first square. Restarts swap process without spawning squares.
-            document.querySelector(`[data-number="${this.firstSquare}"]`).classList.remove("highlightedItem");
+        // Clicked a cell twice or second square is the same color as first square. Restarts swap process without spawning squares.
+        else if((id == this.firstSquare) || (this.boardAr[this.firstSquare] == this.boardAr[id])){
+            this.ChangeHighlight(this.firstSquare);
             this.firstSquare = -1;
         }
+        //first square selected, second square not selected
         else if(this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.secondSquare = id;
+            // this.ChangeHighlight(this.firstSquare);
+            this.highlightedID = -1;
             this.SwapSquares(this.firstSquare, this.secondSquare);
-            document.querySelector(`[data-number="${this.firstSquare}"]`).classList.remove("highlightedItem");
             this.firstSquare = -1;
             this.secondSquare = -1;
 
@@ -100,15 +120,13 @@ export default class SuperballBoard {
             for (let j = 0; j < 10; j++) {
                 if (document.querySelector(`[data-number="${(i*10) + j}"]`).style.backgroundColor != "") {
                     // Check right cell.
-                    if (j != 9 && this.disjSet.find((i*10) + j) != this.disjSet.find((i*10) + j + 1) &&
-                        document.querySelector(`[data-number="${(i*10) + j}"]`).style.backgroundColor ==
-                        document.querySelector(`[data-number="${(i*10) + j+1}"]`).style.backgroundColor) {
+                    if (j != 9 && this.disjSet.find((i*10) + j) != this.disjSet.find((i*10) + j + 1)
+                    && this.boardAr[(i*10) + j] == this.boardAr[(i*10) + j+1]) {
                             this.disjSet.Union((i*10) + j, (i*10) + j + 1);
                     }
                     // Check below
-                    if (i < 7 && this.disjSet.find((i*10) + j) != this.disjSet.find(((i+1)*10) + j) &&
-                        document.querySelector(`[data-number="${(i*10) + j}"]`).style.backgroundColor ==
-                        document.querySelector(`[data-number="${((i+1)*10) + j}"]`).style.backgroundColor) {
+                    if (i < 7 && this.disjSet.find((i*10) + j) != this.disjSet.find(((i+1)*10) + j) 
+                    && this.boardAr[(i*10) + j] == this.boardAr[((i+1) * 10) +j]) {
                             this.disjSet.Union((i*10) + j, ((i+1)*10) + j);
                     }
                 }
@@ -169,12 +187,15 @@ export default class SuperballBoard {
         }
         if (this.firstSquare > -1 && this.disjSet.getParentSize(this.firstSquare) >= this.mss && this.IsGoalCell(this.firstSquare)) { // calls collect
             // Squares are removed.
+            let scoreMultiplier = this.scoreArray[this.boardAr[this.firstSquare]];
+            let squaresRemoved = 0;
             for (let i = 0; i < 80; i++) {
                 if (this.disjSet.find(i) == this.disjSet.find(this.firstSquare)) {
                     document.querySelector(`[data-number="${i}"`).style.backgroundColor = "lightgray";
                     this.boardAr[i] = 0;
                     this.emptySet.push(i); // Question: does emptySet need to be in order? Right now it wont be.
                     this.filledSquares--;
+                    squaresRemoved++;
                 }
             }
             
@@ -185,6 +206,7 @@ export default class SuperballBoard {
             this.SpawnSquares();
 
             // Increment score:
+            this.score += scoreMultiplier * squaresRemoved;
              
             //change score variable
             document.getElementById("scoreContainer").innerHTML = this.score;
@@ -213,6 +235,11 @@ export default class SuperballBoard {
         return false;
     }
 
+    ConsoleLogBoard() {
+        for(let i = 0; i < 79; i++) {
+            console.log(this.boardAr[i])
+        }
+    }
 }
 
 // Completed by Matthew on 4/15:
