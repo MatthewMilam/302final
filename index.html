@@ -20,13 +20,16 @@
     <div class="playContainer">
         <div style="display: flex; flex-direction: column; padding-top: 3%;">
             <div class="headerContainer">
-                <p style="font-size: 3rem;">Lame-O-Ball</p>
-                <div class="buttonContainer" style="margin-left: auto;">
-                    <p>Score</p>
-                    <span id="scoreContainer">0</span>
+                <div style="display: flex; flex-direction: row;">
+                    <p style="font-size: 3rem; justify-self: flex-start;">Lame-O-Ball</p>
+                    <div style="margin-left: auto;" id="scoreContainer">
+                        <p>Score</p>
+                        <span id="scoreElement">0</span>
+                    </div>
                 </div>
-                <div class="buttonContainer">
-                    <button id="NewGameButton">New Game</button>
+                <div style="display: flex; flex-direction: row;">
+                    <button class="buttonContainer">Change Game Mode</button>
+                    <button class="buttonContainer" id="NewGameButton" style="margin-left: auto;">New Game</button>
                 </div>
             </div>
             <div class="gridContainer">
@@ -39,10 +42,16 @@
             </div>
         </div>
         <div class="footerContainer">
-            <p>HOW TO PLAY: Click to swap the cells, and after the swap, five new random cells will be filled with random colors.
-            The goal is to achieve the highest possible score. To add to your score you can click a goal cell (the special highlighted cell)
-            and hit collect. Every adjacent color will be removed and subsequently added to your score, but there must be a minimum of 5 connected cells.
+            <p>HOW TO PLAY: Click the colored cells to swap them, and after the swap, five new random cells will be filled with random colors.
+            The goal is to achieve the highest possible score. To add to your score you can group similar colors together, click a goal cell (the rounded cells),
+            and hit collect. Every connected cell that's the same color will be removed and subsequently added to your score, but there must be a minimum of 5 connected cells.
            </p> 
+           <p>Different colored cells have different scores when collected.</p>
+           <p>Purple 2</p>
+           <p>Blue 3</p>
+           <p>Yellow 4</p>
+           <p>Red 5</p>
+           <p>Green 6</p>
         </div>
     </div>
     <script type="module" src="lameoball.js"></script>

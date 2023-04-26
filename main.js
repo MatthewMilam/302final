@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
     CollectButton.addEventListener('click', board.Collect.bind(board));
 });
 
-
 // Main area - moved to main.js commenting out for now
 // SpawnSquares(); // spawns squares the first 
 // filledSquares += 5;

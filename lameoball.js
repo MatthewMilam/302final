@@ -52,11 +52,10 @@ export default class SuperballBoard {
         const originalColor = getComputedStyle(element).backgroundColor;
         const colorArr = originalColor.substring(4, originalColor.length - 1).split(",").map(n => parseInt(n, 10));
         const [r, g, b] = colorArr;
-        console.log(this.highlightedID);
+        console.log("highlightedID", this.highlightedID);
         if(this.highlightedID == -1) {
             this.highlightedID = id;
             const darkerColor = `rgb(${Math.max(r - 100, 0)}, ${Math.max(g - 100, 0)}, ${Math.max(b - 100, 0)})`;
-            console.log(darkerColor);
             element.style.backgroundColor = darkerColor;
         }
         else {
@@ -68,7 +67,6 @@ export default class SuperballBoard {
     SwapSquares(firstSquareInput, secondSquareInput) {
         //change HTML
         let tempSetting = this.colorArray[this.boardAr[firstSquareInput]];
-        console.log(tempSetting);
         document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor = this.colorArray[this.boardAr[secondSquareInput]];
         document.querySelector(`[data-number="${secondSquareInput}"]`).style.backgroundColor = tempSetting;
     
@@ -158,6 +156,11 @@ export default class SuperballBoard {
         this.emptySet.length = 0;
         this.filledSquares = 0;
         this.disjSet = new DisjointSet(80);
+        
+        //Reset Score
+        this.score = 0;
+        document.getElementById("scoreElement").innerHTML = this.score;
+
         for(let i=0; i < 80; i++) {
             this.boardAr[i] = 0;
             this.emptySet.push(i);
@@ -209,30 +212,45 @@ export default class SuperballBoard {
             this.score += scoreMultiplier * squaresRemoved;
              
             //change score variable
-            document.getElementById("scoreContainer").innerHTML = this.score;
+            document.getElementById("scoreElement").innerHTML = this.score;
         }
         else if (this.firstSquare == -1){
-            displayWarningMessage("Error: No square has been selected to score.");
+            displayWarningMessage("No square has been selected to score.");
         }
         else if (!this.IsGoalCell(this.firstSquare)) {
-            displayWarningMessage("Error: Player tried to score a non goal cell.");
+            displayWarningMessage("Player tried to score a non goal cell.");
         }
         else if (this.disjSet.getParentSize(this.firstSquare) < this.mss) {
-            displayWarningMessage("Error: Size of disjoint set is less than 5.")
+            displayWarningMessage("Size of disjoint set is less than 5.")
         }
     
     }
     
     GameOver() {
-        if (this.filledSquares == 80) {
-            for (let i = 0; i < 80; i++) {
-                if (this.disjSet.getParentSize(this.firstSquare) >= this.mss) {
-                    return false;
-                }
-            }
+        if(this.filledSquares > 75) {
             return true;
         }
         return false;
+    }
+
+    DisableButtons() {
+        // get all button elements on the page
+        const buttons = document.getElementsByTagName('button');
+
+        // loop through all the button elements and disable them
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+        }
+    }
+
+    EnableButtons() {
+        // get all button elements on the page
+        const buttons = document.getElementsByTagName('button');
+
+        // loop through all the button elements and disable them
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = false;
+        }
     }
 
     ConsoleLogBoard() {
