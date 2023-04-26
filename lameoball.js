@@ -164,7 +164,7 @@ export default class SuperballBoard {
         for(let i=0; i < 80; i++) {
             this.boardAr[i] = 0;
             this.emptySet.push(i);
-            document.querySelector(`[data-number="${i}"]`).style.backgroundColor = "lightgray";
+            document.querySelector(`[data-number="${i}"]`).style.backgroundColor = "gainsboro";     // Why does this color look wrong? Gainsboro or lightgrey?
         }
         
         this.SpawnSquares();
@@ -194,7 +194,7 @@ export default class SuperballBoard {
             let squaresRemoved = 0;
             for (let i = 0; i < 80; i++) {
                 if (this.disjSet.find(i) == this.disjSet.find(this.firstSquare)) {
-                    document.querySelector(`[data-number="${i}"`).style.backgroundColor = "lightgray";
+                    document.querySelector(`[data-number="${i}"`).style.backgroundColor =  "gainsboro";
                     this.boardAr[i] = 0;
                     this.emptySet.push(i); // Question: does emptySet need to be in order? Right now it wont be.
                     this.filledSquares--;
