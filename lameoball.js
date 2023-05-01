@@ -186,7 +186,8 @@ export default class SuperballBoard {
                 }
             }
             
-            document.querySelector(`[data-number="${this.firstSquare}"]`).classList.remove("highlightedItem");
+            // document.querySelector(`[data-number="${this.firstSquare}"]`).classList.remove("highlightedItem");
+            this.ChangeHighlight(this.firstSquare);
             this.firstSquare = -1;
 
 
