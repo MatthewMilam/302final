@@ -1,26 +1,3 @@
-/* What to get done
-1. Finish superball functions
-   - add 5 different colors (get random color), function to select random color (rpbgy) MATTHEW (done)
-   - Swapping fix (shouldn't be able to swap any non-colored squares) BRYCE (done)
-   - fix collect button to hold a collect function - make collect have to be called on goal cell. MATTHEW (done)
-   - make collect reset the first swap (so you cant swap, collect and swap) BRYCE
-   - add inability to swap same color. MATTHEW
-2. Disjoint sets
-   - Adding disjoint sets
-   - Actually using disjoint sets in functions.
-   - Scoring function, (related) is ending the game when no swaps / scores possible.
-3. Invent 2 player version
-3.5 Actually code the 2 player version
-4. Ai easy
-5. Ai hard
-*/
-
-/*
-Due Dates:
-
-
-*/
-
 import DisjointSet, * as boardFile from './disjoint.js'
 
 export default class SuperballBoard {
@@ -98,7 +75,12 @@ export default class SuperballBoard {
             this.secondSquare = -1;
 
             if (this.GameOver()) {
-               this.NewGame();
+                let overlay = document.getElementById("overlay");
+                overlay.style.display = "flex"
+                setTimeout(function() {
+                    overlay.style.opacity = "1";
+                }, 100);
+                // this.NewGame();
             }
             else {
                 this.SpawnSquares();
@@ -130,9 +112,6 @@ export default class SuperballBoard {
                 }
             }
         }
-
-
-        //this.disjSet.decodePrint();
     }
     
     SpawnSquares() {
@@ -164,9 +143,14 @@ export default class SuperballBoard {
         for(let i=0; i < 80; i++) {
             this.boardAr[i] = 0;
             this.emptySet.push(i);
-            document.querySelector(`[data-number="${i}"]`).style.backgroundColor = "gainsboro";     // Why does this color look wrong? Gainsboro or lightgrey?
+            document.querySelector(`[data-number="${i}"]`).style.backgroundColor = "rgb(183, 183, 183)";     // Why does this color look wrong? Gainsboro or lightgrey?
         }
         
+
+        let overlay = document.getElementById("overlay");
+        overlay.style.display = "none"
+        overlay.style.opacity = "0";
+
         this.SpawnSquares();
     }
 
@@ -253,12 +237,37 @@ export default class SuperballBoard {
         }
     }
 
+
+
     ConsoleLogBoard() {
         for(let i = 0; i < 79; i++) {
             console.log(this.boardAr[i])
         }
     }
 }
+
+/* What to get done
+1. Finish superball functions
+   - add 5 different colors (get random color), function to select random color (rpbgy) MATTHEW (done)
+   - Swapping fix (shouldn't be able to swap any non-colored squares) BRYCE (done)
+   - fix collect button to hold a collect function - make collect have to be called on goal cell. MATTHEW (done)
+   - make collect reset the first swap (so you cant swap, collect and swap) BRYCE
+   - add inability to swap same color. MATTHEW
+2. Disjoint sets
+   - Adding disjoint sets
+   - Actually using disjoint sets in functions.
+   - Scoring function, (related) is ending the game when no swaps / scores possible.
+3. Invent 2 player version
+3.5 Actually code the 2 player version
+4. Ai easy
+5. Ai hard
+*/
+
+/*
+Due Dates:
+
+
+*/
 
 // Completed by Matthew on 4/15:
 // 1. Added error commands on score function

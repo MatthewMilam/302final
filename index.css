@@ -30,7 +30,9 @@ p {
 
 .buttonContainer {
 	margin: .3rem;
-	background-color: rgb(161, 117, 71);
+	background-color: rgb(134, 112, 88);
+	color: white;
+	border-color: transparent;
 	display: flex;
 	/* align-items: center;
 	justify-content: center; */
@@ -46,6 +48,7 @@ p {
 }
 
 .gridContainer {
+	position: relative;
 	display: grid;
 	gap: 10px 10px;
 	margin-top: 5%;
@@ -112,6 +115,23 @@ p {
 	align-items: center;
 	justify-content: center;
 	padding-top: 1rem;
+}
+
+#overlay {
+	display: none;
+	opacity: 0;
+	transition: opacity 0.5s;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background-color: rgba(110, 110, 110, 0.7); /* This sets the color to black with 50% opacity */
+	border-radius: 10px;
 }
 
 .footerContainer {

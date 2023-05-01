@@ -47,6 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    const TryAgainButton = document.getElementById('TryAgainButton');
+    TryAgainButton.addEventListener('click', board.NewGame.bind(board));
+});
+
+document.addEventListener('DOMContentLoaded', () => {
     const SquareButtons = Array.from(document.getElementsByClassName('gridItemTemplate'));
     SquareButtons.forEach((element) => {
         element.addEventListener('click', (event) => {
@@ -61,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const CollectButton = document.getElementById('CollectButton');
     CollectButton.addEventListener('click', board.Collect.bind(board));
 });
+
 
 // Main area - moved to main.js commenting out for now
 // SpawnSquares(); // spawns squares the first 
