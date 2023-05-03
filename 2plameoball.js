@@ -17,10 +17,11 @@ export default class TwoPlayerSuperballBoard {
         this.disjSet = new DisjointSet(80);
 
         this.boardAr = [];
-        this.emptySet = [];
-        // this.boardAr = new Array(80);
-        // this.emptySet = new Array(80);
-        this.filledSquares = 0;
+        this.emptySetL = [];
+        this.emptySetR = [];
+        
+        this.filledSquaresL = 0;
+        this.filledSquaresR = 0;
         this.mss = 5;
         this.score = 0;
         this.colorArray = ["gainsboro", "darkorchid", "aqua", "yellow", "crimson", "chartreuse"];
@@ -29,10 +30,11 @@ export default class TwoPlayerSuperballBoard {
         this.secondSquare = -1;
         this.highlightedID = -1;
         for (let i = 0; i < 80; i++) {
-            this.emptySet.push(i);
+            if (i % 10 < 5) this.emptySetL.push(i);
+            else this.emptySetR.push(i);
+
             this.boardAr.push(0);
-            // this.emptySet[i] = i;
-            // this.boardAr[i] = 0;
+            
         }
     }
 
@@ -112,6 +114,7 @@ export default class TwoPlayerSuperballBoard {
             for (let j = 0; j < 10; j++) {
                 if (document.querySelector(`[data-number="${(i*10) + j}"]`).style.backgroundColor != "") {
                     // Check right cell
+                    // This is different from 1 player version in that sets aren't unioned across middle line.
                     if (j != 9 && j != 4 && this.disjSet.find((i*10) + j) != this.disjSet.find((i*10) + j + 1)
                     && this.boardAr[(i*10) + j] == this.boardAr[(i*10) + j+1]) {
                             this.disjSet.Union((i*10) + j, (i*10) + j + 1);
@@ -126,26 +129,47 @@ export default class TwoPlayerSuperballBoard {
         }
     }
     
+    // This is different from 1 player version. 2 squares per side spawn.
     SpawnSquares() {
-        let numToSpawn = 5;
-        if (this.filledSquares > 75) numToSpawn = 80 - this.filledSquares;
+        // Left code
+        let numToSpawn = 2;
+        if (this.filledSquaresL > 38) numToSpawn = 40 - this.filledSquaresL;
         for(let i=0; i < numToSpawn; i++) {
-            const intPos = Math.floor(Math.random() * this.emptySet.length);
+            const intPos = Math.floor(Math.random() * this.emptySetL.length);
             const randomColor = Math.floor(Math.random() * 5) + 1;
-            document.querySelector(`[data-number="${this.emptySet[intPos]}"`).style.backgroundColor = this.colorArray[randomColor];
-            this.boardAr[this.emptySet[intPos]] = randomColor;
+            document.querySelector(`[data-number="${this.emptySetL[intPos]}"`).style.backgroundColor = this.colorArray[randomColor];
+            this.boardAr[this.emptySetL[intPos]] = randomColor;
             // TODO: remove intPos indexed element from emptySet array
-            this.emptySet.splice(intPos, 1);
+            this.emptySetL.splice(intPos, 1);
         }
     
         this.firstSquare = -1;
+        this.filledSquaresL += numToSpawn;
+
+        // Right code
+        numToSpawn = 2;
+        if (this.filledSquaresR > 38) numToSpawn = 40 - this.filledSquaresR;
+        for(let i=0; i < numToSpawn; i++) {
+            const intPos = Math.floor(Math.random() * this.emptySetR.length);
+            const randomColor = Math.floor(Math.random() * 5) + 1;
+            document.querySelector(`[data-number="${this.emptySetR[intPos]}"`).style.backgroundColor = this.colorArray[randomColor];
+            this.boardAr[this.emptySetR[intPos]] = randomColor;
+            // TODO: remove intPos indexed element from emptySet array
+            this.emptySetR.splice(intPos, 1);
+        }
+    
+        this.firstSquare = -1;
+        this.filledSquaresR += numToSpawn;
+
+
         this.updateDisjSet();
-        this.filledSquares += 5;
     }
     
     NewGame() {
-        this.emptySet.length = 0;
-        this.filledSquares = 0;
+        this.emptySetL.length = 0;
+        this.emptySetR.length = 0;
+        this.filledSquaresL = 0;
+        this.filledSquaresR = 0;
         this.disjSet = new DisjointSet(80);
         
         //Reset Score
@@ -153,8 +177,10 @@ export default class TwoPlayerSuperballBoard {
         document.getElementById("scoreElement").innerHTML = this.score;
 
         for(let i=0; i < 80; i++) {
+            if (i % 10 < 5) this.emptySetL.push(i);
+            else this.emptySetR.push(i);
+
             this.boardAr[i] = 0;
-            this.emptySet.push(i);
             document.querySelector(`[data-number="${i}"]`).style.backgroundColor = "rgb(183, 183, 183)";     // Why does this color look wrong? Gainsboro or lightgrey?
         }
         
@@ -172,6 +198,20 @@ export default class TwoPlayerSuperballBoard {
         }
         return false;
     }
+
+    IsLeftGoalCell(int) {
+        if((int % 10) === 0 || (int % 10) === 1) {
+            return true;
+        }
+        return false;
+    }
+
+    IsRightGoalCell(int) {
+        if((int % 10) === 8 || (int % 10) === 9) {
+            return true;
+        }
+        return false;
+    }
     
     Collect() {
         function displayWarningMessage(message) {
@@ -184,7 +224,7 @@ export default class TwoPlayerSuperballBoard {
                 warningMessageElement.style.opacity = 0;
             }, 1000);
         }
-        if (this.firstSquare > -1 && this.disjSet.getParentSize(this.firstSquare) >= this.mss && this.IsGoalCell(this.firstSquare)) { // calls collect
+        if (this.firstSquare > -1 && this.disjSet.getParentSize(this.firstSquare) >= this.mss && this.IsLeftGoalCell(this.firstSquare)) { // calls collect
             // Squares are removed.
             let scoreMultiplier = this.scoreArray[this.boardAr[this.firstSquare]];
             let squaresRemoved = 0;
@@ -192,8 +232,8 @@ export default class TwoPlayerSuperballBoard {
                 if (this.disjSet.find(i) == this.disjSet.find(this.firstSquare)) {
                     document.querySelector(`[data-number="${i}"`).style.backgroundColor =  "gainsboro";
                     this.boardAr[i] = 0;
-                    this.emptySet.push(i); // Question: does emptySet need to be in order? Right now it wont be.
-                    this.filledSquares--;
+                    this.emptySetL.push(i);
+                    this.filledSquaresL--;
                     squaresRemoved++;
                 }
             }
@@ -214,20 +254,28 @@ export default class TwoPlayerSuperballBoard {
         else if (this.firstSquare == -1){
             displayWarningMessage("No square has been selected to score.");
         }
-        else if (!this.IsGoalCell(this.firstSquare)) {
+        else if (!this.IsLeftGoalCell(this.firstSquare) && !this.IsRightGoalCell(this.firstSquare)) {
             displayWarningMessage("Player tried to score a non goal cell.");
+        }
+        else if (!this.IsLeftGoalCell(this.firstSquare)) {
+            displayWarningMessage("Player tried to score in opponent's goal cell.");
         }
         else if (this.disjSet.getParentSize(this.firstSquare) < this.mss) {
             displayWarningMessage("Size of disjoint set is less than 5.")
         }
     
     }
+
+    computerTurn() {
+
+    }
     
     GameOver() {
-        if(this.filledSquares > 75) {
+        if(this.filledSquaresL > 38 && this.filledSquaresR > 38) {
             return true;
         }
         return false;
+
     }
 
     DisableButtons() {
@@ -263,4 +311,6 @@ export default class TwoPlayerSuperballBoard {
 
 Notes on 2 player class (written by matthew 5/2):
  - Disjoint sets size function was altered to not merge disjoint sets along the center y-axis of the board.
+ - emptySet and filledSquares were split into left and right versions of each.
+ - Collect changed (uses IsLeftGoalCell now)
 */

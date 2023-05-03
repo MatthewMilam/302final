@@ -128,7 +128,7 @@ export default class SuperballBoard {
     
         this.firstSquare = -1;
         this.updateDisjSet();
-        this.filledSquares += 5;
+        this.filledSquares += numToSpawn;
     }
     
     NewGame() {
