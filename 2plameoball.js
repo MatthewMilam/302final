@@ -97,7 +97,7 @@ export default class TwoPlayerSuperballBoard {
                 // this.NewGame();
             }
             else {
-                this.SpawnSquares();
+                this.endTurn();
             }
         
         }
@@ -112,7 +112,7 @@ export default class TwoPlayerSuperballBoard {
         this.disjSet = new DisjointSet(80);
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 10; j++) {
-                if (document.querySelector(`[data-number="${(i*10) + j}"]`).style.backgroundColor != "") {
+                if (this.boardAr[(i*10) + j] != 0) {
                     // Check right cell
                     // This is different from 1 player version in that sets aren't unioned across middle line.
                     if (j != 9 && j != 4 && this.disjSet.find((i*10) + j) != this.disjSet.find((i*10) + j + 1)
@@ -242,8 +242,8 @@ export default class TwoPlayerSuperballBoard {
             this.ChangeHighlight(this.firstSquare);
             this.firstSquare = -1;
 
-
-            this.SpawnSquares();
+            
+            this.endTurn();
 
             // Increment score:
             this.score += scoreMultiplier * squaresRemoved;
@@ -266,9 +266,52 @@ export default class TwoPlayerSuperballBoard {
     
     }
 
-    computerTurn() {
-
+    
+    endTurn() {
+        this.SpawnSquares();
+        //this.computerTurn();
+        this.SpawnSquares();
     }
+
+    computerTurn() {
+        // Easy Mode
+        // TODO: Score if possible
+        // TODO: 
+
+        // Hard Mode
+        // TODO: swap, redo disjoint set, create integer value for the board, store, swap back, repeat for all swaps.
+        // Calculating swap score: Take each disjoint set size, square it, if its computer's side, add, if not, subtract.
+        // Take best move, perform swap.
+        let maxScore = -10000000; // TODO: how to get lowest int value.
+        let maxFirst = 0;
+        let maxSecond = 0;
+        let score = 0;
+        let temp = 0;
+        
+
+        for (let i = 0; i < 79; i++) {
+            for (let j = i + 1; j < 80; j++) {
+                if (this.boardAr[i] != 0 && this.boardAr[j] != 0 && this.boardAr[i] != this.boardAr[j]) {
+                    // swap, disjoint, score, set score max, swap back.
+                    temp = this.boardAr[i];
+                    this.boardAr[i] = this.boardAr[j];
+                    this.boardAr[j] = temp;
+
+                    this.updateDisjSet();
+
+                    score = scoreBoard();
+                }
+            }
+        }
+        
+
+        this.updateDisjSet();
+    }
+
+    scoreBoard() {
+        
+    }
+
     
     GameOver() {
         if(this.filledSquaresL > 38 && this.filledSquaresR > 38) {
@@ -313,4 +356,8 @@ Notes on 2 player class (written by matthew 5/2):
  - Disjoint sets size function was altered to not merge disjoint sets along the center y-axis of the board.
  - emptySet and filledSquares were split into left and right versions of each.
  - Collect changed (uses IsLeftGoalCell now)
+
+ Things to do:
+ - Add computer move (write function)
+ - Integrate computer moves into the other code (currently we only call spawnsquares at the end of turns. Do we also )
 */
