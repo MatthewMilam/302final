@@ -214,6 +214,7 @@ export default class TwoPlayerSuperballBoard {
     }
     
     Collect() {
+        console.log("TEST OUTPUT 22222222");
         function displayWarningMessage(message) {
             const warningMessageElement = document.getElementById("WarningMessage");
             warningMessageElement.innerText = message;

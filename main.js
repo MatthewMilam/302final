@@ -12,7 +12,8 @@
 //Call constructor for the board class
 import TwoPlayerSuperballBoard from './2plameoball.js';
 import SuperballBoard, * as boardFile from './lameoball.js'
-//let board = new SuperballBoard();
+
+// let board = new SuperballBoard();
 let board = new TwoPlayerSuperballBoard();
 
 // Colors: White(1), Purple(2), Blue(3), Yellow(4), Red(5), Green(6)
@@ -34,23 +35,65 @@ for(let i=20; i < 60; i++) {
     }
 }
 
+function ChangeGame() {
+    let overlay = document.getElementById("ChangeGameButton");
+    overlay.style.display = "flex";
+    overlay.style.opacity = 1;
+};
+
+
+function SinglePlayerFunction() {
+    console.log("Single Player");
+    board = new SuperballBoard();
+    board.NewGame();
+    let overlay = document.getElementById("ChangeGameButton");
+    overlay.style.display = "none";
+    overlay.style.opacity = 0;
+};
+
+function TwoPlayerFunction() {
+    console.log("Two Player");
+    board = new TwoPlayerSuperballBoard();
+    board.NewGame();
+    let overlay = document.getElementById("ChangeGameButton");
+    overlay.style.display = "none";
+    overlay.style.opacity = 0;
+};
 
 board.SpawnSquares(); // spawns squares the first 
 
 //add buttons event listeners to call functions when clicked
+//Swap Game Mode Functions
 document.addEventListener('DOMContentLoaded', () => {
-    const SpawnSquaresButton = document.getElementById('SpawnSquaresButton');
-    SpawnSquaresButton.addEventListener('click', board.SpawnSquares.bind(board));
+    const changeGameButton = document.getElementById('changeGameButton');
+    changeGameButton.addEventListener('click', ChangeGame);
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    const SinglePlayerButton = document.getElementById('SinglePlayerButton');
+    SinglePlayerButton.addEventListener('click', SinglePlayerFunction);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const TwoPlayerButton = document.getElementById('TwoPlayerButton');
+    TwoPlayerButton.addEventListener('click', TwoPlayerFunction);
+});
+
+//Other buttons
+function getBoardMethod(methodName) {
+    return function() {
+        board[methodName].apply(board, arguments);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
     const NewGameButton = document.getElementById('NewGameButton');
-    NewGameButton.addEventListener('click', board.NewGame.bind(board));
+    NewGameButton.addEventListener('click', getBoardMethod('NewGame'));
 });
 
 document.addEventListener('DOMContentLoaded', () => {
     const TryAgainButton = document.getElementById('TryAgainButton');
-    TryAgainButton.addEventListener('click', board.NewGame.bind(board));
+    TryAgainButton.addEventListener('click', getBoardMethod('NewGame'));
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -58,17 +101,15 @@ document.addEventListener('DOMContentLoaded', () => {
     SquareButtons.forEach((element) => {
         element.addEventListener('click', (event) => {
             const dataNumber = element.getAttribute('data-number');
-            board.SetSwap(dataNumber);
-
+            getBoardMethod('SetSwap')(dataNumber);
         });
     });
 });
 
 document.addEventListener('DOMContentLoaded', () => {
     const CollectButton = document.getElementById('CollectButton');
-    CollectButton.addEventListener('click', board.Collect.bind(board));
+    CollectButton.addEventListener('click', getBoardMethod('Collect'));
 });
-
 
 // Main area - moved to main.js commenting out for now
 // SpawnSquares(); // spawns squares the first 

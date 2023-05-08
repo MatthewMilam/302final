@@ -10,9 +10,18 @@ p {
 	padding: 0;
 }
 
+.playContainer {
+	display: flex;
+	justify-content: center;
+	padding-top: 3%;
+	padding-bottom: 5%;
+	flex-direction: column;
+	align-items: center;
+}
+
 .headerContainer {
 	display: flex;
-	/* align-items: center; */
+	width: 510px;
 	flex-direction: column;
 }
 
@@ -76,17 +85,9 @@ p {
 	height: 40px;
 }
 
-.playContainer {
-	display: flex;
-	justify-content: center;
-	padding-bottom: 5%;
-	flex-direction: column;
-	align-items: center;
-}
-
 
 #CollectButton {
-	width: 100%;
+	width: 510px;
 	height: 3rem;
 	font-size: 200%;
 }
@@ -117,7 +118,7 @@ p {
 	padding-top: 1rem;
 }
 
-#overlay {
+.overlay {
 	display: none;
 	opacity: 0;
 	transition: opacity 0.5s;
@@ -137,7 +138,7 @@ p {
 .footerContainer {
 	background-color: lightgray;
 	height: 20%;
-	width: 50%;
+	width: 510px;
 	display: flex;
 	justify-content: center;
 	margin-block: 3rem;

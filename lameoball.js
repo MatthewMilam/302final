@@ -75,7 +75,7 @@ export default class SuperballBoard {
             this.secondSquare = -1;
 
             if (this.GameOver()) {
-                let overlay = document.getElementById("overlay");
+                let overlay = document.getElementById("gameOverOverlay");
                 overlay.style.display = "flex"
                 setTimeout(function() {
                     overlay.style.opacity = "1";
@@ -147,7 +147,7 @@ export default class SuperballBoard {
         }
         
 
-        let overlay = document.getElementById("overlay");
+        let overlay = document.getElementById("gameOverOverlay");
         overlay.style.display = "none"
         overlay.style.opacity = "0";
 
@@ -162,6 +162,7 @@ export default class SuperballBoard {
     }
     
     Collect() {
+        console.log("TEST OUTPUT");
         function displayWarningMessage(message) {
             const warningMessageElement = document.getElementById("WarningMessage");
             warningMessageElement.innerText = message;
