@@ -68,8 +68,26 @@ export default class TwoPlayerSuperballBoard {
     }
     
     SetSwap(id) {
+
+        function displayWarningMessage(message) {
+            const warningMessageElement = document.getElementById("WarningMessage");
+            warningMessageElement.innerText = message;
+            warningMessageElement.style.opacity = 1;
+        
+            setTimeout(() => {
+                warningMessageElement.style.transition = 'opacity 1s linear 0s'; // Add this line
+                warningMessageElement.style.opacity = 0;
+            }, 1000);
+        }
+
+        // Added for 2player mode. Sends error message if player tries to 
+        if (this.boardAr[id] != 0 && this.IsRightGoalCell(id)) {
+            displayWarningMessage("Player cannot access opponent's goal cells.");
+            this.firstSquare = -1;
+            this.secondSquare = -1;
+        }
         //both not selected
-        if(this.firstSquare == -1 && this.secondSquare == -1 && this.boardAr[id] != 0) {
+        else if(this.firstSquare == -1 && this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.firstSquare = id;
             //console.log(id);
             this.ChangeHighlight(this.firstSquare);
@@ -200,14 +218,14 @@ export default class TwoPlayerSuperballBoard {
     }
 
     IsLeftGoalCell(int) {
-        if((int % 10) === 0 || (int % 10) === 1) {
+        if(int > 19 && int < 61 && ((int % 10) === 0 || (int % 10) === 1)) {
             return true;
         }
         return false;
     }
 
     IsRightGoalCell(int) {
-        if((int % 10) === 8 || (int % 10) === 9) {
+        if(int > 19 && int < 61 && ((int % 10) === 8 || (int % 10) === 9)) {
             return true;
         }
         return false;
@@ -292,7 +310,8 @@ export default class TwoPlayerSuperballBoard {
 
         for (let i = 0; i < 79; i++) {
             for (let j = i + 1; j < 80; j++) {
-                if (this.boardAr[i] != 0 && this.boardAr[j] != 0 && this.boardAr[i] != this.boardAr[j]) {
+                if (this.boardAr[i] != 0 && this.boardAr[j] != 0 && this.boardAr[i] != this.boardAr[j]
+                    && !this.IsLeftGoalCell(i) && !this.IsLeftGoalCell(j)) {
                     
                     // Swap squares
                     temp = this.boardAr[i];
@@ -401,4 +420,14 @@ Notes on 2 player class (written by matthew 5/2):
  Things to do:
  - Add computer move (write function)
  - Integrate computer moves into the other code (currently we only call spawnsquares at the end of turns. Do we also )
-*/
+
+5/7 - More things to do:
+ - Update isGoalCell functions (corners should be legal)
+ - Make AI not move squares in goalcells
+ - Change move scoring system to make clumps attached to goalcells more important.
+ - Change order of turns... How many moves, how many spawns.
+ - If 2 move at a time, need to make player able to move twice.
+ - AI scoring.
+
+ - Scoring system for 2plater mode
+ */
