@@ -13,7 +13,9 @@
 import DisjointSet, * as boardFile from './disjoint.js'
 
 export default class TwoPlayerSuperballBoard {
-    constructor() {
+    constructor(diff) {
+        this.diff = diff;
+
         this.disjSet = new DisjointSet(80);
         
         
@@ -107,13 +109,15 @@ export default class TwoPlayerSuperballBoard {
             this.firstSquare = -1;
             this.secondSquare = -1;
 
-            if (this.GameOver()) {
+            if (!this.hasPlayerLost() && this.hasComputerLost()) {
+                return;
+            }
+            if (this.hasPlayerLost() && this.hasComputerLost()) {
                 let overlay = document.getElementById("overlay");
                 overlay.style.display = "flex"
                 setTimeout(function() {
                     overlay.style.opacity = "1";
                 }, 100);
-                // this.NewGame();
             }
             else {
                 this.endTurn();
@@ -161,6 +165,7 @@ export default class TwoPlayerSuperballBoard {
             this.boardAr[this.emptySetL[intPos]] = randomColor;
             // TODO: remove intPos indexed element from emptySet array
             this.emptySetL.splice(intPos, 1);
+
         }
     
         this.firstSquare = -1;
@@ -190,6 +195,7 @@ export default class TwoPlayerSuperballBoard {
         this.emptySetR.length = 0;
         this.filledSquaresL = 0;
         this.filledSquaresR = 0;
+
         this.disjSet = new DisjointSet(80);
         this.firstSquare = -1;
         this.secondSquare = -1;
@@ -292,22 +298,24 @@ export default class TwoPlayerSuperballBoard {
 
     
     endTurn() {
-        this.SpawnSquares();
-        this.computerTurn();
-        //this.SpawnSquares();
+        if (!this.hasPlayerLost()) {
+            this.SpawnSquares();
+            this.computerTurn();
+            return;
+        }
+        else {
+            // Player has lost the game, but the computer is still going.
+            while (!this.hasComputerLost()) {
+                this.SpawnSquares();
+                this.computerTurn();
+            }
+
+        }
     }
 
     computerTurn() {
-        // Easy Mode
-        // TODO: Score if possible
-        // TODO: 
 
-        // Hard Mode
-        // TODO: swap, redo disjoint set, create integer value for the board, store, swap back, repeat for all swaps.
-        // Calculating swap score: Take each disjoint set size, square it, if its computer's side, add, if not, subtract.
-        // Take best move, perform swap.
-
-        let maxScore = -10000000; // TODO: how to get lowest int value.
+        let maxScore = Number.MIN_SAFE_INTEGER; // TODO: how to get lowest int value.
         let maxFirst = 0;
         let maxSecond = 0;
         let score = 0;
@@ -343,9 +351,6 @@ export default class TwoPlayerSuperballBoard {
             document.getElementById("scoreElement").innerHTML = this.score;
 
             return;
-        }
-        else {
-
         }
 
 
@@ -394,27 +399,61 @@ export default class TwoPlayerSuperballBoard {
 
         this.updateDisjSet();
 
-        console.log("Move " + maxFirst + " and " + maxSecond + " with score " + maxScore);
+        console.log("Move " + maxFirst + " and " + maxSecond + " with score " + maxScore + " (diff " + this.diff);
 
     }
 
     scoreBoard() {
-        let score = 0;
-        for (let i = 0; i < 80; i++) {
-            if (this.disjSet.sizes[this.disjSet.find(i)] > 0) {
-                if (i % 10 < 5) {
-                    score -= (this.disjSet.sizes[this.disjSet.find(i)] * this.disjSet.sizes[this.disjSet.find(i)]);
+
+        if (this.diff === 0) {
+            let score = 0;
+            for (let i = 0; i < 80; i++) {
+                if (this.disjSet.sizes[this.disjSet.find(i)] > 0) {
+                    if (i % 10 < 5) {
+                        score -= (this.disjSet.sizes[this.disjSet.find(i)]);
+                    }
+                    else {
+                        score += (this.disjSet.sizes[this.disjSet.find(i)]);
+                    }
+                    this.disjSet.sizes[this.disjSet.find(i)] = 0;
                 }
-                else {
-                    score += (this.disjSet.sizes[this.disjSet.find(i)] * this.disjSet.sizes[this.disjSet.find(i)]);
-                }
-                this.disjSet.sizes[this.disjSet.find(i)] = 0;
             }
+    
+            return score;
         }
 
-        return score;
+
+        if(this.diff === 1) {
+            let score = 0;
+            for (let i = 0; i < 80; i++) {
+                if (this.disjSet.sizes[this.disjSet.find(i)] > 0) {
+                    if (i % 10 < 5) {
+                        score -= (this.disjSet.sizes[this.disjSet.find(i)] * this.disjSet.sizes[this.disjSet.find(i)]);
+                    }
+                    else {
+                        score += (this.disjSet.sizes[this.disjSet.find(i)] * this.disjSet.sizes[this.disjSet.find(i)]);
+                    }
+                    this.disjSet.sizes[this.disjSet.find(i)] = 0;
+                }
+            }
+    
+            return score;
+        }
     }
 
+    hasPlayerLost() {
+        if(this.filledSquaresL > 38) {
+            return true;
+        }
+        return false;
+    }
+    
+    hasComputerLost() {
+        if(this.filledSquaresR > 38) {
+            return true;
+        }
+        return false;
+    }
     
     GameOver() {
         if(this.filledSquaresL > 38 && this.filledSquaresR > 38) {
