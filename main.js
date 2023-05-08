@@ -13,8 +13,8 @@
 import TwoPlayerSuperballBoard from './2plameoball.js';
 import SuperballBoard, * as boardFile from './lameoball.js'
 
-let board = new SuperballBoard();
-//let board = new TwoPlayerSuperballBoard();
+//let board = new SuperballBoard();
+let board = new TwoPlayerSuperballBoard();
 
 // Colors: White(1), Purple(2), Blue(3), Yellow(4), Red(5), Green(6)
 var elem = document.querySelector('.gridItemTemplate');
@@ -60,7 +60,7 @@ function TwoPlayerFunction() {
     overlay.style.opacity = 0;
 };
 
-board.SpawnSquares(); // spawns squares the first 
+board.SpawnSquares(); // spawns squares the first time // WHY IS THIS NEEDED? it should spawn squares in NewGame() but doens't...
 
 //add buttons event listeners to call functions when clicked
 //Swap Game Mode Functions

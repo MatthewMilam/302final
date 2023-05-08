@@ -188,17 +188,20 @@ export default class TwoPlayerSuperballBoard {
         this.filledSquaresL = 0;
         this.filledSquaresR = 0;
         this.disjSet = new DisjointSet(80);
+        this.firstSquare = -1;
+        this.secondSquare = -1;
+        this.highlightedID = -1;
         
         //Reset Score
         this.score = 0;
         document.getElementById("scoreElement").innerHTML = this.score;
 
-        for(let i=0; i < 80; i++) {
+        for(let i = 0; i < 80; i++) {
             if (i % 10 < 5) this.emptySetL.push(i);
             else this.emptySetR.push(i);
 
             this.boardAr[i] = 0;
-            document.querySelector(`[data-number="${i}"]`).style.backgroundColor = "rgb(183, 183, 183)";     // Why does this color look wrong? Gainsboro or lightgrey?
+            document.querySelector(`[data-number="${i}"]`).style.backgroundColor = "rgb(183, 183, 183)";
         }
         
 
@@ -307,20 +310,41 @@ export default class TwoPlayerSuperballBoard {
         let score = 0;
         let temp = 0;
 
-        let scored = false;
+        let tileToScore = 0;
         let sizeScored = 0;
 
         for (let i = 20; i < 60; i++) {
-            if (this.IsRightGoalCell(i) && this.disjSet.sizes[this.disjSet.find(i)] > sizeScored) {
+            if (this.IsRightGoalCell(i) && this.disjSet.getParentSize(i) >= sizeScored) {
                 sizeScored = this.disjSet.sizes[this.disjSet.find(i)];
+                tileToScore = i;
             }
         }
 
-        if (sizeScored) {
-            
+        if (sizeScored >= this.mss) {
+            let scoreMultiplier = this.scoreArray[this.boardAr[tileToScore]];
+            let squaresRemoved = 0;
+            for (let i = 0; i < 80; i++) {
+                if (this.disjSet.find(i) == this.disjSet.find(tileToScore)) {
+                    document.querySelector(`[data-number="${i}"`).style.backgroundColor = "gainsboro";
+                    this.boardAr[i] = 0;
+                    this.emptySetR.push(i);
+                    this.filledSquaresR--;
+                    squaresRemoved++;
+                }
+            }
+
+            // Increment score:
+            this.score -= scoreMultiplier * squaresRemoved;
+             
+            //change score variable
+            document.getElementById("scoreElement").innerHTML = this.score;
+
+            return;
+        }
+        else {
+
         }
 
-        sizeScored = 0; // Not needed when finished coding.
 
         for (let i = 0; i < 79; i++) {
             for (let j = i + 1; j < 80; j++) {
@@ -444,5 +468,6 @@ Notes on 2 player class (written by matthew 5/2):
  - AI scoring.
 
  - Scoring system for 2plater mode
- - fix bug with color
+ - fix bug with grey color
+ - spawning squares bug in newgame... won't work.
  */
