@@ -13,7 +13,7 @@
 import TwoPlayerSuperballBoard from './2plameoball.js';
 import SuperballBoard, * as boardFile from './lameoball.js'
 
-// let board = new SuperballBoard();
+//let board = new SuperballBoard();
 let board = new TwoPlayerSuperballBoard();
 
 // Colors: White(1), Purple(2), Blue(3), Yellow(4), Red(5), Green(6)

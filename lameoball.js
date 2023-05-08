@@ -1,3 +1,6 @@
+// TODO: update goal cell function. 
+
+
 import DisjointSet, * as boardFile from './disjoint.js'
 
 export default class SuperballBoard {
@@ -42,15 +45,14 @@ export default class SuperballBoard {
     }
 
     SwapSquares(firstSquareInput, secondSquareInput) {
-        //change HTML
-        let tempSetting = this.colorArray[this.boardAr[firstSquareInput]];
-        document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor = this.colorArray[this.boardAr[secondSquareInput]];
-        document.querySelector(`[data-number="${secondSquareInput}"]`).style.backgroundColor = tempSetting;
-    
         //change JS data
         let tempVar = this.boardAr[firstSquareInput];
         this.boardAr[firstSquareInput] = this.boardAr[secondSquareInput];
         this.boardAr[secondSquareInput] = tempVar;
+
+        // Update colors.
+        document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor = this.colorArray[this.boardAr[firstSquareInput]];
+        document.querySelector(`[data-number="${secondSquareInput}"]`).style.backgroundColor = this.colorArray[this.boardAr[secondSquareInput]];
     }
     
     SetSwap(id) {

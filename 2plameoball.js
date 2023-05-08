@@ -56,15 +56,14 @@ export default class TwoPlayerSuperballBoard {
     }
 
     SwapSquares(firstSquareInput, secondSquareInput) {
-        //change HTML
-        let tempSetting = this.colorArray[this.boardAr[firstSquareInput]];
-        document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor = this.colorArray[this.boardAr[secondSquareInput]];
-        document.querySelector(`[data-number="${secondSquareInput}"]`).style.backgroundColor = tempSetting;
-    
         //change JS data
         let tempVar = this.boardAr[firstSquareInput];
         this.boardAr[firstSquareInput] = this.boardAr[secondSquareInput];
         this.boardAr[secondSquareInput] = tempVar;
+
+        // Update colors.
+        document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor = this.colorArray[this.boardAr[firstSquareInput]];
+        document.querySelector(`[data-number="${secondSquareInput}"]`).style.backgroundColor = this.colorArray[this.boardAr[secondSquareInput]];
     }
     
     SetSwap(id) {
@@ -249,7 +248,7 @@ export default class TwoPlayerSuperballBoard {
             let squaresRemoved = 0;
             for (let i = 0; i < 80; i++) {
                 if (this.disjSet.find(i) == this.disjSet.find(this.firstSquare)) {
-                    document.querySelector(`[data-number="${i}"`).style.backgroundColor =  "gainsboro";
+                    document.querySelector(`[data-number="${i}"`).style.backgroundColor = "gainsboro";
                     this.boardAr[i] = 0;
                     this.emptySetL.push(i);
                     this.filledSquaresL--;
@@ -301,12 +300,27 @@ export default class TwoPlayerSuperballBoard {
         // TODO: swap, redo disjoint set, create integer value for the board, store, swap back, repeat for all swaps.
         // Calculating swap score: Take each disjoint set size, square it, if its computer's side, add, if not, subtract.
         // Take best move, perform swap.
+
         let maxScore = -10000000; // TODO: how to get lowest int value.
         let maxFirst = 0;
         let maxSecond = 0;
         let score = 0;
         let temp = 0;
-        
+
+        let scored = false;
+        let sizeScored = 0;
+
+        for (let i = 20; i < 61; i++) {
+            if (this.IsRightGoalCell(i) && this.disjSet.sizes[this.disjSet.find(i)] > sizeScored) {
+                sizeScored = this.disjSet.sizes[this.disjSet.find(i)];
+            }
+        }
+
+        if (sizeScored) {
+            
+        }
+
+        sizeScored = 0; // Not needed when finished coding.
 
         for (let i = 0; i < 79; i++) {
             for (let j = i + 1; j < 80; j++) {
@@ -339,15 +353,17 @@ export default class TwoPlayerSuperballBoard {
             }
         }
 
+        this.SwapSquares(maxFirst, maxSecond);
+
         // Update colors on screen.
-        let tempSetting = this.colorArray[this.boardAr[maxFirst]];
-        document.querySelector(`[data-number="${maxFirst}"]`).style.backgroundColor = this.colorArray[this.boardAr[maxSecond]];
-        document.querySelector(`[data-number="${maxSecond}"]`).style.backgroundColor = tempSetting;
+        //let tempSetting = this.colorArray[this.boardAr[maxFirst]];
+        //document.querySelector(`[data-number="${maxFirst}"]`).style.backgroundColor = this.colorArray[this.boardAr[maxSecond]];
+        //document.querySelector(`[data-number="${maxSecond}"]`).style.backgroundColor = tempSetting;
 
         // Peform best move.
-        temp = this.boardAr[maxFirst];
-        this.boardAr[maxFirst] = this.boardAr[maxSecond];
-        this.boardAr[maxSecond] = temp;
+        //temp = this.boardAr[maxFirst];
+        //this.boardAr[maxFirst] = this.boardAr[maxSecond];
+        //this.boardAr[maxSecond] = temp;
 
         this.updateDisjSet();
 
@@ -422,8 +438,6 @@ Notes on 2 player class (written by matthew 5/2):
  - Integrate computer moves into the other code (currently we only call spawnsquares at the end of turns. Do we also )
 
 5/7 - More things to do:
- - Update isGoalCell functions (corners should be legal)
- - Make AI not move squares in goalcells
  - Change move scoring system to make clumps attached to goalcells more important.
  - Change order of turns... How many moves, how many spawns.
  - If 2 move at a time, need to make player able to move twice.
