@@ -465,9 +465,8 @@ Notes on 2 player class (written by matthew 5/2):
  - Change move scoring system to make clumps attached to goalcells more important.
  - Change order of turns... How many moves, how many spawns.
  - If 2 move at a time, need to make player able to move twice.
- - AI scoring.
 
- - Scoring system for 2plater mode
- - fix bug with grey color
+ - Scoring system for 2player mode (currently when computer scores, score goes negative).
+ - fix bug with grey color (when scoring, two greys are different...)
  - spawning squares bug in newgame... won't work.
  */
