@@ -217,14 +217,14 @@ export default class TwoPlayerSuperballBoard {
     }
 
     IsLeftGoalCell(int) {
-        if(int > 19 && int < 61 && ((int % 10) === 0 || (int % 10) === 1)) {
+        if(int > 19 && int < 60 && ((int % 10) === 0 || (int % 10) === 1)) {
             return true;
         }
         return false;
     }
 
     IsRightGoalCell(int) {
-        if(int > 19 && int < 61 && ((int % 10) === 8 || (int % 10) === 9)) {
+        if(int > 19 && int < 60 && ((int % 10) === 8 || (int % 10) === 9)) {
             return true;
         }
         return false;
@@ -310,7 +310,7 @@ export default class TwoPlayerSuperballBoard {
         let scored = false;
         let sizeScored = 0;
 
-        for (let i = 20; i < 61; i++) {
+        for (let i = 20; i < 60; i++) {
             if (this.IsRightGoalCell(i) && this.disjSet.sizes[this.disjSet.find(i)] > sizeScored) {
                 sizeScored = this.disjSet.sizes[this.disjSet.find(i)];
             }
@@ -444,4 +444,5 @@ Notes on 2 player class (written by matthew 5/2):
  - AI scoring.
 
  - Scoring system for 2plater mode
+ - fix bug with color
  */

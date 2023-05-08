@@ -157,7 +157,7 @@ export default class SuperballBoard {
     }
 
     IsGoalCell(int) {
-        if((int % 10) === 0 || (int % 10) === 1 || (int % 10) === 8 || (int % 10) === 9) {
+        if(int > 19 && int < 60 && ((int % 10) === 0 || (int % 10) === 1 || (int % 10) === 8 || (int % 10) === 9)) {
             return true;
         }
         return false;
