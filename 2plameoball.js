@@ -208,7 +208,7 @@ export default class TwoPlayerSuperballBoard {
         }
         
 
-        let overlay = document.getElementById("overlay");
+        let overlay = document.getElementById("gameOverOverlay");
         overlay.style.display = "none";
         overlay.style.opacity = "0";
 
