@@ -43,22 +43,41 @@ function ChangeGame() {
 
 
 function SinglePlayerFunction() {
-    console.log("Single Player");
     board = new SuperballBoard();
     board.NewGame();
+
     let overlay = document.getElementById("ChangeGameButton");
     overlay.style.display = "none";
     overlay.style.opacity = 0;
 };
 
 function TwoPlayerFunction() {
-    console.log("Two Player");
-    board = new TwoPlayerSuperballBoard();
-    board.NewGame();
+    let difficultyOverlay = document.getElementById("ChangeDifficultyButton");
+    difficultyOverlay.style.display = "flex";
+    difficultyOverlay.style.opacity = 1;
+
     let overlay = document.getElementById("ChangeGameButton");
     overlay.style.display = "none";
     overlay.style.opacity = 0;
 };
+
+function TPEasyFunction() {
+    board = new TwoPlayerSuperballBoard(0);
+    board.NewGame();
+
+    let overlay = document.getElementById("ChangeDifficultyButton");
+    overlay.style.display = "none";
+    overlay.style.opacity = 0;
+}
+
+function TPHardFunction() {
+    board = new TwoPlayerSuperballBoard(1);
+    board.NewGame();
+
+    let overlay = document.getElementById("ChangeDifficultyButton");
+    overlay.style.display = "none";
+    overlay.style.opacity = 0;
+}
 
 board.SpawnSquares(); // spawns squares the first time // WHY IS THIS NEEDED? it should spawn squares in NewGame() but doens't...
 
@@ -74,9 +93,20 @@ document.addEventListener('DOMContentLoaded', () => {
     SinglePlayerButton.addEventListener('click', SinglePlayerFunction);
 });
 
+
 document.addEventListener('DOMContentLoaded', () => {
     const TwoPlayerButton = document.getElementById('TwoPlayerButton');
     TwoPlayerButton.addEventListener('click', TwoPlayerFunction);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const TwoPlayerButton = document.getElementById('TPEasyButton');
+    TwoPlayerButton.addEventListener('click', TPEasyFunction);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const TwoPlayerButton = document.getElementById('TPHardButton');
+    TwoPlayerButton.addEventListener('click', TPHardFunction);
 });
 
 //Other buttons
