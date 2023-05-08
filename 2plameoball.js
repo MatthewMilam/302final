@@ -15,7 +15,9 @@ import DisjointSet, * as boardFile from './disjoint.js'
 export default class TwoPlayerSuperballBoard {
     constructor() {
         this.disjSet = new DisjointSet(80);
-
+        
+        
+        this.multiplier = [];
         this.boardAr = [];
         this.emptySetL = [];
         this.emptySetR = [];
@@ -24,7 +26,7 @@ export default class TwoPlayerSuperballBoard {
         this.filledSquaresR = 0;
         this.mss = 5;
         this.score = 0;
-        this.colorArray = ["gainsboro", "darkorchid", "aqua", "yellow", "crimson", "chartreuse"];
+        this.colorArray = ["silver", "darkorchid", "aqua", "yellow", "crimson", "chartreuse"];
         this.scoreArray = [0, 2, 3, 4, 5, 6];
         this.firstSquare = -1;
         this.secondSquare = -1;
@@ -145,6 +147,7 @@ export default class TwoPlayerSuperballBoard {
             }
         }
     }
+
     
     // This is different from 1 player version. 2 squares per side spawn.
     SpawnSquares() {
@@ -201,7 +204,7 @@ export default class TwoPlayerSuperballBoard {
             else this.emptySetR.push(i);
 
             this.boardAr[i] = 0;
-            document.querySelector(`[data-number="${i}"]`).style.backgroundColor = "rgb(183, 183, 183)";
+            document.querySelector(`[data-number="${i}"]`).style.backgroundColor = this.colorArray[0];//"rgb(183, 183, 183)";
         }
         
 
@@ -251,7 +254,7 @@ export default class TwoPlayerSuperballBoard {
             let squaresRemoved = 0;
             for (let i = 0; i < 80; i++) {
                 if (this.disjSet.find(i) == this.disjSet.find(this.firstSquare)) {
-                    document.querySelector(`[data-number="${i}"`).style.backgroundColor = "gainsboro";
+                    document.querySelector(`[data-number="${i}"`).style.backgroundColor = this.colorArray[0];
                     this.boardAr[i] = 0;
                     this.emptySetL.push(i);
                     this.filledSquaresL--;
@@ -325,7 +328,7 @@ export default class TwoPlayerSuperballBoard {
             let squaresRemoved = 0;
             for (let i = 0; i < 80; i++) {
                 if (this.disjSet.find(i) == this.disjSet.find(tileToScore)) {
-                    document.querySelector(`[data-number="${i}"`).style.backgroundColor = "gainsboro";
+                    document.querySelector(`[data-number="${i}"`).style.backgroundColor = this.colorArray[0];
                     this.boardAr[i] = 0;
                     this.emptySetR.push(i);
                     this.filledSquaresR--;

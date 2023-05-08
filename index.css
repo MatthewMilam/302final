@@ -68,8 +68,11 @@ p {
 }
 
 .gridItemTemplate {
-	background-color: rgb(183, 183, 183);
+	background-color: silver;
 	border-color: darkgray;
+
+	/*background-color:  rgb(183, 183, 183);
+	border-color: darkgray;*/
 	width: 40px;
 	height: 40px;
 }
