@@ -186,7 +186,7 @@ export default class TwoPlayerSuperballBoard {
         
 
         let overlay = document.getElementById("overlay");
-        overlay.style.display = "none"
+        overlay.style.display = "none";
         overlay.style.opacity = "0";
 
         this.SpawnSquares();
@@ -270,8 +270,8 @@ export default class TwoPlayerSuperballBoard {
     
     endTurn() {
         this.SpawnSquares();
-        //this.computerTurn();
-        this.SpawnSquares();
+        this.computerTurn();
+        //this.SpawnSquares();
     }
 
     computerTurn() {
@@ -293,24 +293,64 @@ export default class TwoPlayerSuperballBoard {
         for (let i = 0; i < 79; i++) {
             for (let j = i + 1; j < 80; j++) {
                 if (this.boardAr[i] != 0 && this.boardAr[j] != 0 && this.boardAr[i] != this.boardAr[j]) {
-                    // swap, disjoint, score, set score max, swap back.
+                    
+                    // Swap squares
                     temp = this.boardAr[i];
                     this.boardAr[i] = this.boardAr[j];
                     this.boardAr[j] = temp;
 
+                    // Update disjoint sets
                     this.updateDisjSet();
 
-                    score = scoreBoard();
+                    // Score the board.
+                    score = this.scoreBoard();
+
+                    // Update best move if score is the max score.
+                    if (score > maxScore) {
+                        maxScore = score;
+                        maxFirst = i;
+                        maxSecond = j;
+                    }
+
+                    // Swap squares back.
+                    this.boardAr[j] = this.boardAr[i];
+                    this.boardAr[i] = temp;
+                    
                 }
             }
         }
-        
+
+        // Update colors on screen.
+        let tempSetting = this.colorArray[this.boardAr[maxFirst]];
+        document.querySelector(`[data-number="${maxFirst}"]`).style.backgroundColor = this.colorArray[this.boardAr[maxSecond]];
+        document.querySelector(`[data-number="${maxSecond}"]`).style.backgroundColor = tempSetting;
+
+        // Peform best move.
+        temp = this.boardAr[maxFirst];
+        this.boardAr[maxFirst] = this.boardAr[maxSecond];
+        this.boardAr[maxSecond] = temp;
 
         this.updateDisjSet();
+
+        console.log("Move " + maxFirst + " and " + maxSecond + " with score " + maxScore);
+
     }
 
     scoreBoard() {
-        
+        let score = 0;
+        for (let i = 0; i < 80; i++) {
+            if (this.disjSet.sizes[this.disjSet.find(i)] > 0) {
+                if (i % 10 < 5) {
+                    score -= (this.disjSet.sizes[this.disjSet.find(i)] * this.disjSet.sizes[this.disjSet.find(i)]);
+                }
+                else {
+                    score += (this.disjSet.sizes[this.disjSet.find(i)] * this.disjSet.sizes[this.disjSet.find(i)]);
+                }
+                this.disjSet.sizes[this.disjSet.find(i)] = 0;
+            }
+        }
+
+        return score;
     }
 
     
