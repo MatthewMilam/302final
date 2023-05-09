@@ -1,31 +1,28 @@
-// Things that need to be coded
-
-// Things to do before start on 2 player, change the game over logic to fill the board then show game over
-
-// Change main to reassign board when they want to play two player mode
-
-// Superball board with functions
-// Note: Main will have to be changed to reassign the board Object to be a 2 player board Object. That will allow the main.js 
-// buttons to call functions from the two player mode object instead of the one player mode object. It will also allow us
-// to not have to remake all the buttons, and instead just have them call the different functions.
+// This file contains the logic for the 2-player version of Superball. Much of this code is the exact
+// same as lameoball.js, so comments will only be placed where code differs from the 1-player version.
+// To see differences between the two versions, see the readme file.
 
 
 import DisjointSet, * as boardFile from './disjoint.js'
 
+
 export default class TwoPlayerSuperballBoard {
+    // One main difference is that the parameter diff is used for 2-player version to denote the difficulty.
+    // 0 is easy and 1 is hard mode.
     constructor(diff) {
         this.diff = diff;
 
         this.disjSet = new DisjointSet(80);
         
-        
-        this.multiplier = [];
         this.boardAr = [];
+
+        // Emptyset and filledSquares have a Left and Right verison now since the game depends on whether one side
+        // of the board is filled, not the entire board, and spawning squares must spawn 2 on each side.
         this.emptySetL = [];
         this.emptySetR = [];
-        
         this.filledSquaresL = 0;
         this.filledSquaresR = 0;
+
         this.mss = 5;
         this.score = 0;
         this.colorArray = ["silver", "darkorchid", "aqua", "yellow", "crimson", "chartreuse"];
@@ -33,8 +30,12 @@ export default class TwoPlayerSuperballBoard {
         this.firstSquare = -1;
         this.secondSquare = -1;
         this.highlightedID = -1;
+
         this.compHighlightedID1 = -1;
         this.compHighlightedID2 = -1;
+
+        // Empty set L and R are pushed back with the indicies of empty values, which is every square on the board at
+        // the start of the game.
         for (let i = 0; i < 80; i++) {
             if (i % 10 < 5) this.emptySetL.push(i);
             else this.emptySetR.push(i);
@@ -61,6 +62,9 @@ export default class TwoPlayerSuperballBoard {
         }
     }
 
+    // This function is used during the AI's turn to highlight squares before it moves them
+    // (so the player sees which moves the computer is making). It is the same as the other function,
+    // it just uses the highlightedID 1 and 2 to know if a square is highlighted or not.
     computerChangeHighlight(id) {
         const element = document.querySelector(`[data-number="${id}"]`);
         const originalColor = getComputedStyle(element).backgroundColor;
@@ -76,6 +80,7 @@ export default class TwoPlayerSuperballBoard {
             element.style.backgroundColor = this.colorArray[this.boardAr[id]];
         }
     }
+
 
     SwapSquares(firstSquareInput, secondSquareInput) {
         //change JS data
@@ -200,6 +205,8 @@ export default class TwoPlayerSuperballBoard {
     SpawnSquares() {
         // Left code
         let numToSpawn = 2;
+        
+        // If filled squares is above 38, only 1 or 0 squares spawn. (since there's 40 tiles on each side).
         if (this.filledSquaresL > 38) numToSpawn = 40 - this.filledSquaresL;
         for(let i=0; i < numToSpawn; i++) {
             const intPos = Math.floor(Math.random() * this.emptySetL.length);
