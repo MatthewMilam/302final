@@ -531,24 +531,3 @@ export default class TwoPlayerSuperballBoard {
         }
     }
 }
-
-/*
-
-Notes on 2 player class (written by matthew 5/2):
- - Disjoint sets size function was altered to not merge disjoint sets along the center y-axis of the board.
- - emptySet and filledSquares were split into left and right versions of each.
- - Collect changed (uses IsLeftGoalCell now)
-
- Things to do:
- - Add computer move (write function)
- - Integrate computer moves into the other code (currently we only call spawnsquares at the end of turns. Do we also )
-
-5/7 - More things to do:
- - Change move scoring system to make clumps attached to goalcells more important.
- - Change order of turns... How many moves, how many spawns.
- - If 2 move at a time, need to make player able to move twice.
-
- - Scoring system for 2player mode (currently when computer scores, score goes negative).
- - fix bug with grey color (when scoring, two greys are different...)
- - spawning squares bug in newgame... won't work.
- */
