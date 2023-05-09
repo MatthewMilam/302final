@@ -15,7 +15,7 @@ export default class SuperballBoard {
         this.scoreArray = [0, 2, 3, 4, 5, 6];   // Holds the score bonuses of each color.
         this.firstSquare = -1;  
         this.secondSquare = -1;     // These two hold the index that has been selected by the user to swap.
-        //this.highlightedID = -1;
+        this.highlightedID = -1;
 
         // To start the game, emptySet holds all values 0-79 since all squares are empty, and the boardArray is filled
         // with zeros.
