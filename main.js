@@ -5,28 +5,28 @@
 import TwoPlayerSuperballBoard from './2plameoball.js';
 import SuperballBoard, * as boardFile from './lameoball.js';
 
-//let board = new SuperballBoard();
-let board = new TwoPlayerSuperballBoard(0);
+let board = new SuperballBoard();
+// let board = new TwoPlayerSuperballBoard(0);
 
 // Colors: White(1), Purple(2), Blue(3), Yellow(4), Red(5), Green(6)
-var elem = document.querySelector('.gridItemTemplate');
+// Gets the single cell in the HTML, then clones it to create the board
+var cell = document.querySelector('.gridItemTemplate');
 for (let i = 0; i < 80; i++) {
     board.boardAr[i] = 0;
-    var clone = elem.cloneNode(true);
+    var clone = cell.cloneNode(true);
     clone.dataset.number = ((79 - i));
-    elem.after(clone);
+    cell.after(clone);
 }
-elem.remove();
+cell.remove();
 
-//Create goal cells
+// Create goal cells by adding the CSS class "gridGoal", making it circular
 for(let i=20; i < 60; i++) {
     if(board.IsGoalCell(i)) {
-      //console.log(i)
-      // console.log(document.querySelector(`[data-number="${i}"]`));
       document.querySelector(`[data-number="${i}"]`).classList.add("gridGoal");
     }
 }
 
+// Shows the change game mode overlay
 function ChangeGame() {
     let overlay = document.getElementById("ChangeGameButton");
     overlay.style.display = "flex";
@@ -34,15 +34,7 @@ function ChangeGame() {
 };
 
 
-function SinglePlayerFunction() {
-    board = new SuperballBoard();
-    board.NewGame();
-
-    let overlay = document.getElementById("ChangeGameButton");
-    overlay.style.display = "none";
-    overlay.style.opacity = 0;
-};
-
+// Changes the overlay to show easy or hard options, and removes the single or two player overlay
 function TwoPlayerFunction() {
     let difficultyOverlay = document.getElementById("ChangeDifficultyButton");
     difficultyOverlay.style.display = "flex";
@@ -53,27 +45,66 @@ function TwoPlayerFunction() {
     overlay.style.opacity = 0;
 };
 
+function SinglePlayerGoalCellsFunction() {
+    for(let i=20; i < 60; i++) {
+        if(board.IsGoalCell(i)) {
+            document.querySelector(`[data-number="${i}"]`).style.borderWidth = "2px";
+            document.querySelector(`[data-number="${i}"]`).style.borderColor = "black";
+        }
+    }
+}
+
+function TwoPlayerGoalCellsFunction() {
+    for(let i=20; i < 60; i++) {
+        if(board.IsLeftGoalCell(i)) {
+            document.querySelector(`[data-number="${i}"]`).style.borderWidth = "6px";
+            document.querySelector(`[data-number="${i}"]`).style.borderColor = "green";
+        }
+        if(board.IsRightGoalCell(i)) {
+            document.querySelector(`[data-number="${i}"]`).style.borderWidth = "6px";
+            document.querySelector(`[data-number="${i}"]`).style.borderColor = "red";
+        }
+    }
+}
+
+// Changes the board object to be two player easy by passing in 0, and also removes the overlay
 function TPEasyFunction() {
     board = new TwoPlayerSuperballBoard(0);
     board.NewGame();
+    TwoPlayerGoalCellsFunction();
 
     let overlay = document.getElementById("ChangeDifficultyButton");
     overlay.style.display = "none";
     overlay.style.opacity = 0;
 }
 
+// Changes the board object to be two player easy by passing in 1, and also removes the overlay
 function TPHardFunction() {
     board = new TwoPlayerSuperballBoard(1);
     board.NewGame();
+    TwoPlayerGoalCellsFunction();
 
     let overlay = document.getElementById("ChangeDifficultyButton");
     overlay.style.display = "none";
     overlay.style.opacity = 0;
 }
 
-board.SpawnSquares(); // spawns squares the first time // WHY IS THIS NEEDED? it should spawn squares in NewGame() but doens't...
+// Changes the board object to be single player, and also removes the overlay
+function SinglePlayerFunction() {
+    board = new SuperballBoard();
+    board.NewGame();
+    SinglePlayerGoalCellsFunction();
 
-//add buttons event listeners to call functions when clicked
+    let overlay = document.getElementById("ChangeGameButton");
+    overlay.style.display = "none";
+    overlay.style.opacity = 0;
+};
+
+board.SpawnSquares(); // spawns squares the first time // WHY IS THIS NEEDED? it should spawn squares in NewGame() but doens't...
+// What do you mean why is it needed, I can't find a time in main.js where NewGame() is called
+
+//Adds JavaScript event listeners which look for when the HTML button is clicked and execute code
+
 //Swap Game Mode Functions
 document.addEventListener('DOMContentLoaded', () => {
     const changeGameButton = document.getElementById('changeGameButton');
@@ -84,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const SinglePlayerButton = document.getElementById('SinglePlayerButton');
     SinglePlayerButton.addEventListener('click', SinglePlayerFunction);
 });
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const TwoPlayerButton = document.getElementById('TwoPlayerButton');
@@ -101,7 +131,9 @@ document.addEventListener('DOMContentLoaded', () => {
     TwoPlayerButton.addEventListener('click', TPHardFunction);
 });
 
-//Other buttons
+// Other buttons
+// Callback function to call the correct function depending on board, otherwise the event listeners
+    //call on functions for only an individual single or double player board rather than a dynamic changing board
 function getBoardMethod(methodName) {
     return function() {
         board[methodName].apply(board, arguments);
@@ -118,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     TryAgainButton.addEventListener('click', getBoardMethod('NewGame'));
 });
 
+//Special buttons for each cell on the board, which also get the cell number using the HTML data-number custom attribute
 document.addEventListener('DOMContentLoaded', () => {
     const SquareButtons = Array.from(document.getElementsByClassName('gridItemTemplate'));
     SquareButtons.forEach((element) => {
@@ -132,3 +165,4 @@ document.addEventListener('DOMContentLoaded', () => {
     const CollectButton = document.getElementById('CollectButton');
     CollectButton.addEventListener('click', getBoardMethod('Collect'));
 });
+

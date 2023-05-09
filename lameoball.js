@@ -1,16 +1,12 @@
-// TODO: update goal cell function. 
-
-
+// This file contains the logic for the single player version of Superball. It contains the functions and constructor
+// for the single player board
 import DisjointSet, * as boardFile from './disjoint.js'
 
 export default class SuperballBoard {
     constructor() {
         this.disjSet = new DisjointSet(80);
-
         this.boardAr = [];
         this.emptySet = [];
-        // this.boardAr = new Array(80);
-        // this.emptySet = new Array(80);
         this.filledSquares = 0;
         this.mss = 5;
         this.score = 0;
@@ -22,8 +18,6 @@ export default class SuperballBoard {
         for (let i = 0; i < 80; i++) {
             this.emptySet.push(i);
             this.boardAr.push(0);
-            // this.emptySet[i] = i;
-            // this.boardAr[i] = 0;
         }
     }
 
@@ -59,7 +53,6 @@ export default class SuperballBoard {
         //both not selected
         if(this.firstSquare == -1 && this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.firstSquare = id;
-            //console.log(id);
             this.ChangeHighlight(this.firstSquare);
         }
         // Clicked a cell twice or second square is the same color as first square. Restarts swap process without spawning squares.
@@ -188,8 +181,6 @@ export default class SuperballBoard {
                     squaresRemoved++;
                 }
             }
-            
-            // document.querySelector(`[data-number="${this.firstSquare}"]`).classList.remove("highlightedItem");
             this.ChangeHighlight(this.firstSquare);
             this.firstSquare = -1;
 
@@ -238,14 +229,6 @@ export default class SuperballBoard {
         // loop through all the button elements and disable them
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].disabled = false;
-        }
-    }
-
-
-
-    ConsoleLogBoard() {
-        for(let i = 0; i < 79; i++) {
-            console.log(this.boardAr[i])
         }
     }
 }

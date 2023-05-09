@@ -9,6 +9,8 @@
     <title>Lame-O-Ball</title>
 </head>
 <body>
+    <!-- Uses a series of flexbox containers to hold the items -->
+    <!-- The HTML itself does not hold any data, and is only a way of displaying the JavaScript data -->
     <div class="playContainer">
         <div class="headerContainer">
             <div style="display: flex; flex-direction: row;">
@@ -23,6 +25,7 @@
                 <button class="buttonContainer" id="NewGameButton" style="margin-left: auto;">New Game</button>
             </div>
         </div>
+        <!-- The HTML has hidden elements which are set to not display until the user is navigating a menu or lost the game -->
         <div class="gridContainer">
             <div class="overlay" id="ChangeGameButton">
                 <button class="buttonContainer" id="SinglePlayerButton">Single Player</button>
@@ -32,6 +35,8 @@
                 <button class="buttonContainer" id="TPEasyButton">Easy</button>
                 <button class="buttonContainer" id="TPHardButton">Hard</button>
             </div>
+            <!-- The HTML currently written does not have every single element for the board, but the JavaScript takes the
+            template cell and copys it many times to create the grid -->
             <button class="gridItemTemplate" data-number=""></button>
             <div class="overlay" id="gameOverOverlay">
                 <p style="color: white; font-size: 4rem;">Game Over</p>
@@ -41,21 +46,44 @@
         <div class="sidebarContainer">
             <p id="WarningMessage">Warning</p>
             <button id="CollectButton">Collect</button>
-            <!-- <button id="SpawnSquaresButton">Spawn Squares</button> -->
         </div>
         <div class="footerContainer">
-            <p>HOW TO PLAY: Click the colored cells to swap them, and after the swap, five new random cells will be filled with random colors.
+            <div class="footerSpacer"></div>
+            <p style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">HOW TO PLAY: </p> 
+            <p>
+            Click the colored cells to swap them, and after the swap, five new random cells will be filled with random colors.
             The goal is to achieve the highest possible score. To add to your score you can group similar colors together, click a goal cell (the rounded cells),
             and hit collect. Every connected cell that's the same color will be removed and subsequently added to your score, but there must be a minimum of 5 connected cells.
             </p> 
-            <p>Different colored cells have different scores when collected.</p>
-            <p>Purple 2</p>
-            <p>Blue 3</p>
-            <p>Yellow 4</p>
-            <p>Red 5</p>
-            <p>Green 6</p>
+            <div class="footerSpacer"></div>
+            <p style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; margin-bottom: 1%;">Different colored cells have different scores when collected.</p>
+            <div id="tutorialSquaresContainer">
+                <div class="tutorialSquaresElement">
+                    <button class="tutorialItemTemplate" style="background-color: darkorchid;"></button>
+                    <p style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">2</p>
+                </div>
+                <div class="tutorialSquaresElement">
+                    <button class="tutorialItemTemplate" style="background-color: aqua;"></button>
+                    <p style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">3</p>
+                </div>
+                <div class="tutorialSquaresElement">
+                    <button class="tutorialItemTemplate" style="background-color: yellow;"></button>
+                    <p style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">4</p>
+                </div>
+                <div class="tutorialSquaresElement">
+                    <button class="tutorialItemTemplate" style="background-color: crimson;"></button>
+                    <p style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">5</p>
+                </div>
+                <div class="tutorialSquaresElement">
+                    <button class="tutorialItemTemplate" style="background-color: chartreuse;"></button>
+                    <p style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">6</p>
+                </div>
+            </div>
+            <div class="footerSpacer"></div>
+            <p>Created by Matthew Milam and Bryce Richards</p>
         </div>
     </div>
+    <!-- Script objects are attached to the HTML file which contain all of the logic of the game -->
     <script type="module" src="lameoball.js"></script>
     <script type="module" src="disjoint.js"></script>
     <script type="module" src="main.js"></script>
