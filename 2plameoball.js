@@ -50,7 +50,7 @@ export default class TwoPlayerSuperballBoard {
         const originalColor = getComputedStyle(element).backgroundColor;
         const colorArr = originalColor.substring(4, originalColor.length - 1).split(",").map(n => parseInt(n, 10));
         const [r, g, b] = colorArr;
-        console.log("highlightedID", this.highlightedID);
+        //console.log("highlightedID", this.highlightedID);
         if(this.highlightedID == -1) {
             this.highlightedID = id;
             const darkerColor = `rgb(${Math.max(r - 100, 0)}, ${Math.max(g - 100, 0)}, ${Math.max(b - 100, 0)})`;
@@ -156,20 +156,7 @@ export default class TwoPlayerSuperballBoard {
             this.firstSquare = -1;
             this.secondSquare = -1;
 
-            if (!this.hasPlayerLost() && this.hasComputerLost()) {
-                return;
-            }
-            if (this.hasPlayerLost() && this.hasComputerLost()) {
-                let overlay = document.getElementById("overlay");
-                overlay.style.display = "flex"
-                setTimeout(function() {
-                    overlay.style.opacity = "1";
-                }, 100);
-            }
-            else {
-                this.endTurn();
-            }
-        
+            this.endTurn();        
         }
         else {
             console.log("Give a warning message to user");
@@ -213,12 +200,14 @@ export default class TwoPlayerSuperballBoard {
             document.querySelector(`[data-number="${this.emptySetL[intPos]}"`).style.backgroundColor = this.colorArray[randomColor];
             this.boardAr[this.emptySetL[intPos]] = randomColor;
             // TODO: remove intPos indexed element from emptySet array
-            this.emptySetL.splice(intPos, 1);
 
+            console.log("Spawned on left: " + this.emptySetL[intPos] + " " + this.colorArray[randomColor]);
+            this.emptySetL.splice(intPos, 1);
         }
     
         this.firstSquare = -1;
         this.filledSquaresL += numToSpawn;
+
 
         // Right code
         numToSpawn = 2;
@@ -229,10 +218,12 @@ export default class TwoPlayerSuperballBoard {
             document.querySelector(`[data-number="${this.emptySetR[intPos]}"`).style.backgroundColor = this.colorArray[randomColor];
             this.boardAr[this.emptySetR[intPos]] = randomColor;
             // TODO: remove intPos indexed element from emptySet array
+
+
+            console.log("Spawned on right: " + this.emptySetR[intPos] + " " + this.colorArray[randomColor]);
             this.emptySetR.splice(intPos, 1);
         }
     
-        this.firstSquare = -1;
         this.filledSquaresR += numToSpawn;
 
 
@@ -346,18 +337,38 @@ export default class TwoPlayerSuperballBoard {
 
     
     endTurn() {
-        if (!this.hasPlayerLost()) {
+        if (this.hasPlayerLost() && this.hasComputerLost()) {
+            let overlay = document.getElementById("gameOverOverlay");
+                overlay.style.display = "flex"
+                setTimeout(function() {
+                    overlay.style.opacity = "1";
+                }, 100);
+            return;
+        }
+        else if (!this.hasPlayerLost() && this.hasComputerLost()) {
             setTimeout(() => {this.SpawnSquares()}, 300);
-            setTimeout(() => {this.computerTurn()}, 500);
+            //setTimeout(() => {this.SpawnSquares()}, 300);
+            return;
+        }
+        else if (!this.hasComputerLost() && this.hasPlayerLost()) {
+            // Player has lost the game, but the computer is still going.
+            while (!this.hasComputerLost() && this.score > -1) {
+                setTimeout(() => {this.SpawnSquares()}, 300);
+                setTimeout(() => {this.computerTurn()}, 500);
+                console.out("comp move");
+            }
+
+            let overlay = document.getElementById("gameOverOverlay");
+            overlay.style.display = "flex"
+            setTimeout(function() {
+                overlay.style.opacity = "1";
+            }, 100);
             return;
         }
         else {
-            // Player has lost the game, but the computer is still going.
-            while (!this.hasComputerLost()) {
-                this.SpawnSquares();
-                this.computerTurn();
-            }
-
+            setTimeout(() => {this.SpawnSquares()}, 300);
+            setTimeout(() => {this.computerTurn()}, 500);
+            return;
         }
     }
 
