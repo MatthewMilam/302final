@@ -348,7 +348,7 @@ export default class TwoPlayerSuperballBoard {
     endTurn() {
         if (!this.hasPlayerLost()) {
             setTimeout(() => {this.SpawnSquares()}, 300);
-            this.computerTurn();
+            setTimeout(() => {this.computerTurn()}, 500);
             return;
         }
         else {
@@ -363,7 +363,7 @@ export default class TwoPlayerSuperballBoard {
 
 
     computerTurn() {
-        let maxScore = Number.MIN_SAFE_INTEGER; // TODO: how to get lowest int value.
+        let maxScore = Number.MIN_SAFE_INTEGER;
         let maxFirst = 0;
         let maxSecond = 0;
         let score = 0;
@@ -434,7 +434,8 @@ export default class TwoPlayerSuperballBoard {
         }
 
         
-        this.computerSwapSquares(maxFirst, maxSecond);
+        //this.SwapSquares(maxFirst, maxSecond);
+        setTimeout(() => {this.SwapSquares(maxFirst, maxSecond)}, 500);
 
         this.updateDisjSet();
 
