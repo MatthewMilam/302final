@@ -6,6 +6,17 @@
 import DisjointSet, * as boardFile from './disjoint.js'
 
 
+function displayWarningMessage(message) {
+    const warningMessageElement = document.getElementById("WarningMessage");
+    warningMessageElement.innerText = message;
+    warningMessageElement.style.opacity = 1;
+
+    setTimeout(() => {
+        warningMessageElement.style.transition = 'opacity 1s linear 0s'; // Add this line
+        warningMessageElement.style.opacity = 0;
+    }, 1000);
+}
+
 export default class TwoPlayerSuperballBoard {
     // One main difference is that the parameter diff is used for 2-player version to denote the difficulty.
     // 0 is easy and 1 is hard mode.
@@ -119,17 +130,6 @@ export default class TwoPlayerSuperballBoard {
     }
     
     SetSwap(id) {
-        function displayWarningMessage(message) {
-            const warningMessageElement = document.getElementById("WarningMessage");
-            warningMessageElement.innerText = message;
-            warningMessageElement.style.opacity = 1;
-        
-            setTimeout(() => {
-                warningMessageElement.style.transition = 'opacity 1s linear 0s'; // Add this line
-                warningMessageElement.style.opacity = 0;
-            }, 1000);
-        }
-
         // Added for 2player mode. Sends error message if player tries to 
         if (this.boardAr[id] != 0 && this.IsRightGoalCell(id)) {
             displayWarningMessage("Player cannot access opponent's goal cells.");
@@ -143,7 +143,7 @@ export default class TwoPlayerSuperballBoard {
             this.ChangeHighlight(this.firstSquare);
         }
         // Clicked a cell twice or second square is the same color as first square. Restarts swap process without spawning squares.
-        else if((id == this.firstSquare) || (this.boardAr[this.firstSquare] == this.boardAr[id])){
+        else if((id == this.firstSquare)){
             this.ChangeHighlight(this.firstSquare);
             this.firstSquare = -1;
         }
@@ -283,16 +283,6 @@ export default class TwoPlayerSuperballBoard {
     }
     
     Collect() {
-        function displayWarningMessage(message) {
-            const warningMessageElement = document.getElementById("WarningMessage");
-            warningMessageElement.innerText = message;
-            warningMessageElement.style.opacity = 1;
-        
-            setTimeout(() => {
-                warningMessageElement.style.transition = 'opacity 1s linear 0s'; // Add this line
-                warningMessageElement.style.opacity = 0;
-            }, 1000);
-        }
         if (this.firstSquare > -1 && this.disjSet.getParentSize(this.firstSquare) >= this.mss && this.IsLeftGoalCell(this.firstSquare)) { // calls collect
             // Squares are removed.
             let scoreMultiplier = this.scoreArray[this.boardAr[this.firstSquare]];
@@ -461,10 +451,10 @@ export default class TwoPlayerSuperballBoard {
             for (let i = 0; i < 80; i++) {
                 if (this.disjSet.sizes[this.disjSet.find(i)] > 0) {
                     if (i % 10 < 5) {
-                        score -= (this.disjSet.sizes[this.disjSet.find(i)]);
+                        score -= (this.disjSet.sizes[this.disjSet.find(i)]) * 1.5;
                     }
                     else {
-                        score += (this.disjSet.sizes[this.disjSet.find(i)]);
+                        score += (this.disjSet.sizes[this.disjSet.find(i)]) * 1.5;
                     }
                     this.disjSet.sizes[this.disjSet.find(i)] = 0;
                 }

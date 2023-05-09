@@ -2,6 +2,23 @@
 // for the single player board
 import DisjointSet, * as boardFile from './disjoint.js'
 
+
+// This function displayWarningMessage is used later to display a warning if the user scored when it was
+// not possible. It alters the CSS data to add text to the row below the gameboard.
+function displayWarningMessage(message) {
+    //Gets the warning message HTML element, changes it to be the message, and makes it visible
+    const warningMessageElement = document.getElementById("WarningMessage");
+    warningMessageElement.innerText = message;
+    warningMessageElement.style.opacity = 1;
+        
+    // Waits 1 second, adds the transition, then makes it invisible again
+    setTimeout(() => {
+        warningMessageElement.style.transition = 'opacity 1s linear 0s'; // Add this line
+        warningMessageElement.style.opacity = 0;
+    }, 1000);
+}
+
+
 export default class SuperballBoard {
     constructor() {
         this.disjSet = new DisjointSet(80);
@@ -71,7 +88,7 @@ export default class SuperballBoard {
             this.ChangeHighlight(this.firstSquare);
         }
         // Clicked a cell twice or second square is the same color as first square. Restarts swap process without spawning squares.
-        else if((id == this.firstSquare) || (this.boardAr[this.firstSquare] == this.boardAr[id])){
+        else if(id == this.firstSquare){
             this.ChangeHighlight(this.firstSquare);
             this.firstSquare = -1;
         }
@@ -177,21 +194,6 @@ export default class SuperballBoard {
     // has previously selected a square in a goal cell, and the size of the square's cluster is >= 5. It will then
     // remove all square in that cluster and give the player points for the score.
     Collect() {
-        // This function displayWarningMessage is used later to display a warning if the user scored when it was
-        // not possible. It alters the CSS data to add text to the row below the gameboard.
-        function displayWarningMessage(message) {
-            //Gets the warning message HTML element, changes it to be the message, and makes it visible
-            const warningMessageElement = document.getElementById("WarningMessage");
-            warningMessageElement.innerText = message;
-            warningMessageElement.style.opacity = 1;
-        
-            // Waits 1 second, adds the transition, then makes it invisible again
-            setTimeout(() => {
-                warningMessageElement.style.transition = 'opacity 1s linear 0s'; // Add this line
-                warningMessageElement.style.opacity = 0;
-            }, 1000);
-        }
-
         // This if-statement checks to see if the user called the function correctly. If so, it completes the collect call.
         if (this.firstSquare > -1 && this.disjSet.getParentSize(this.firstSquare) >= this.mss && this.IsGoalCell(this.firstSquare)) { // calls collect
             // Squares are removed.
