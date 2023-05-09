@@ -5,23 +5,20 @@ import DisjointSet, * as boardFile from './disjoint.js'
 export default class SuperballBoard {
     constructor() {
         this.disjSet = new DisjointSet(80);
-        // Array to hold the color of each cell as numbers
-        this.boardAr = [];
-        // Array to hold what cells are currently empty
-        this.emptySet = [];
-        // Number to keep track of how many squares are filled
+
+        this.boardAr = [];      // The board array holds values 0 to 5 which keeps track of the color in that square.
+        this.emptySet = [];     // Emptyset is an array holding all indicies of squares that are empty.
         this.filledSquares = 0;
-        // Minimum scoring size
         this.mss = 5;
         this.score = 0;
-        // Array which holds the colors of the board, so a number can be turned into a color
-        this.colorArray = ["silver", "darkorchid", "aqua", "yellow", "crimson", "chartreuse"];
-        this.scoreArray = [0, 2, 3, 4, 5, 6];
-        // Numbers to keep track of selections, and what to highlight
-        this.firstSquare = -1;
-        this.secondSquare = -1;
-        this.highlightedID = -1;
-        // Creates the array of 0's for a board making it empty, and all the numbers for board positions
+        this.colorArray = ["silver", "darkorchid", "aqua", "yellow", "crimson", "chartreuse"]; // Colors of each boardAr value.
+        this.scoreArray = [0, 2, 3, 4, 5, 6];   // Holds the score bonuses of each color.
+        this.firstSquare = -1;  
+        this.secondSquare = -1;     // These two hold the index that has been selected by the user to swap.
+        //this.highlightedID = -1;
+
+        // To start the game, emptySet holds all values 0-79 since all squares are empty, and the boardArray is filled
+        // with zeros.
         for (let i = 0; i < 80; i++) {
             this.emptySet.push(i);
             this.boardAr.push(0);
@@ -35,11 +32,16 @@ export default class SuperballBoard {
         const originalColor = getComputedStyle(element).backgroundColor;
         const colorArr = originalColor.substring(4, originalColor.length - 1).split(",").map(n => parseInt(n, 10));
         const [r, g, b] = colorArr;
+        
+        // This statement means that no square has been selected before calling this function, so it darkens the
+        // current selected squares (which is at index "ID").
         if(this.highlightedID == -1) {
             this.highlightedID = id;
             const darkerColor = `rgb(${Math.max(r - 100, 0)}, ${Math.max(g - 100, 0)}, ${Math.max(b - 100, 0)})`;
             element.style.backgroundColor = darkerColor;
         }
+        // This means a square is already dark when calling the function, so either someone is clicking a square
+        // twice or swapping two squares. Both cases have an outcome of no darkened squares.
         else {
             this.highlightedID = -1;
             // To remove the highlight, just set it back to the color it is in the board array instead of adding to the RGB value
@@ -49,20 +51,23 @@ export default class SuperballBoard {
 
     // Swaps two cells, by first swapping the data in JS and then swaps the colors in HTML
     SwapSquares(firstSquareInput, secondSquareInput) {
-        // Change JS data
+        //change JS data
         let tempVar = this.boardAr[firstSquareInput];
         this.boardAr[firstSquareInput] = this.boardAr[secondSquareInput];
         this.boardAr[secondSquareInput] = tempVar;
 
-        // Change HTML data
+        // Update colors.
         document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor = this.colorArray[this.boardAr[firstSquareInput]];
         document.querySelector(`[data-number="${secondSquareInput}"]`).style.backgroundColor = this.colorArray[this.boardAr[secondSquareInput]];
     }
     
+    
+    // This function is called when 
     SetSwap(id) {
         //both not selected
         if(this.firstSquare == -1 && this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.firstSquare = id;
+            //console.log(id);
             this.ChangeHighlight(this.firstSquare);
         }
         // Clicked a cell twice or second square is the same color as first square. Restarts swap process without spawning squares.
@@ -159,7 +164,8 @@ export default class SuperballBoard {
         this.SpawnSquares();
     }
 
-    // Function which takes in the position, and returns a bool for whether its a goal cell or not
+    // Arithmetic to check if an index is located at a goal cell. Goal cells start at index 20 and end at 59 and
+    // are either the first 2 or last two columns, so modular arithmetic determines whether it is valid or not.
     IsGoalCell(int) {
         if(int > 19 && int < 60 && ((int % 10) === 0 || (int % 10) === 1 || (int % 10) === 8 || (int % 10) === 9)) {
             return true;
@@ -167,9 +173,12 @@ export default class SuperballBoard {
         return false;
     }
     
-    // Function for collecting cells when a player tries to score
+    // This function is called when the user clicks the collect buton. To work, it must be called when the player
+    // has previously selected a square in a goal cell, and the size of the square's cluster is >= 5. It will then
+    // remove all square in that cluster and give the player points for the score.
     Collect() {
-        // Helper function to take in a message, and display the output
+        // This function displayWarningMessage is used later to display a warning if the user scored when it was
+        // not possible. It alters the CSS data to add text to the row below the gameboard.
         function displayWarningMessage(message) {
             //Gets the warning message HTML element, changes it to be the message, and makes it visible
             const warningMessageElement = document.getElementById("WarningMessage");
@@ -182,7 +191,8 @@ export default class SuperballBoard {
                 warningMessageElement.style.opacity = 0;
             }, 1000);
         }
-        // If 
+
+        // This if-statement checks to see if the user called the function correctly. If so, it completes the collect call.
         if (this.firstSquare > -1 && this.disjSet.getParentSize(this.firstSquare) >= this.mss && this.IsGoalCell(this.firstSquare)) { // calls collect
             // Squares are removed.
             let scoreMultiplier = this.scoreArray[this.boardAr[this.firstSquare]];
@@ -196,6 +206,8 @@ export default class SuperballBoard {
                     squaresRemoved++;
                 }
             }
+            
+            // document.querySelector(`[data-number="${this.firstSquare}"]`).classList.remove("highlightedItem");
             this.ChangeHighlight(this.firstSquare);
             this.firstSquare = -1;
 
@@ -244,6 +256,14 @@ export default class SuperballBoard {
         // loop through all the button elements and disable them
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].disabled = false;
+        }
+    }
+
+
+
+    ConsoleLogBoard() {
+        for(let i = 0; i < 79; i++) {
+            console.log(this.boardAr[i])
         }
     }
 }
