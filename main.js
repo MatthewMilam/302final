@@ -1,6 +1,9 @@
+// This file holds the general code for the first game played, as well as setting up the buttons on the page
+// to relate to Javascript functions.
 
+// Singleplayer and 2 player versions imported from other files.
 import TwoPlayerSuperballBoard from './2plameoball.js';
-import SuperballBoard, * as boardFile from './lameoball.js'
+import SuperballBoard, * as boardFile from './lameoball.js';
 
 //let board = new SuperballBoard();
 let board = new TwoPlayerSuperballBoard(0);
@@ -129,7 +132,3 @@ document.addEventListener('DOMContentLoaded', () => {
     const CollectButton = document.getElementById('CollectButton');
     CollectButton.addEventListener('click', getBoardMethod('Collect'));
 });
-
-// Main area - moved to main.js commenting out for now
-// SpawnSquares(); // spawns squares the first 
-// filledSquares += 5;
