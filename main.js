@@ -1,15 +1,4 @@
-// let boardAr = new Array(80);
-// let filledSquares = 0;
-// let mss = 5;
-// let score = 0;
-// let colorArray = ["silver", "darkorchid", "aqua", "yellow", "crimson", "chartreuse"];
-// let scoreArray = [0, 2, 3, 4, 5, 6];
-// let emptySet = [];
-// for (let i = 0; i < 80; i++) {
-//     emptySet[i] = i;
-//     boardAr[i] = 0;
-// }
-//Call constructor for the board class
+
 import TwoPlayerSuperballBoard from './2plameoball.js';
 import SuperballBoard, * as boardFile from './lameoball.js'
 
