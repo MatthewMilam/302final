@@ -33,6 +33,8 @@ export default class TwoPlayerSuperballBoard {
         this.firstSquare = -1;
         this.secondSquare = -1;
         this.highlightedID = -1;
+        this.compHighlightedID1 = -1;
+        this.compHighlightedID2 = -1;
         for (let i = 0; i < 80; i++) {
             if (i % 10 < 5) this.emptySetL.push(i);
             else this.emptySetR.push(i);
@@ -59,7 +61,48 @@ export default class TwoPlayerSuperballBoard {
         }
     }
 
+    computerChangeHighlight(id) {
+        const element = document.querySelector(`[data-number="${id}"]`);
+        const originalColor = getComputedStyle(element).backgroundColor;
+        const colorArr = originalColor.substring(4, originalColor.length - 1).split(",").map(n => parseInt(n, 10));
+        const [r, g, b] = colorArr;
+        if(this.highlightedID == -1) {
+            this.highlightedID = id;
+            const darkerColor = `rgb(${Math.max(r - 100, 0)}, ${Math.max(g - 100, 0)}, ${Math.max(b - 100, 0)})`;
+            element.style.backgroundColor = darkerColor;
+        }
+        else {
+            this.highlightedID = -1;
+            element.style.backgroundColor = this.colorArray[this.boardAr[id]];
+        }
+    }
+
     SwapSquares(firstSquareInput, secondSquareInput) {
+        //change JS data
+        let tempVar = this.boardAr[firstSquareInput];
+        this.boardAr[firstSquareInput] = this.boardAr[secondSquareInput];
+        this.boardAr[secondSquareInput] = tempVar;
+
+        // Update colors.
+        document.querySelector(`[data-number="${firstSquareInput}"]`).style.backgroundColor = this.colorArray[this.boardAr[firstSquareInput]];
+        document.querySelector(`[data-number="${secondSquareInput}"]`).style.backgroundColor = this.colorArray[this.boardAr[secondSquareInput]];
+    }
+
+    computerSwapSquares(firstSquareInput, secondSquareInput) {
+        setTimeout(() => {
+            this.ChangeHighlight(firstSquareInput);
+        }, 300);
+
+        this.ChangeHighlight(firstSquareInput);
+
+        setTimeout(() => {
+           this.ChangeHighlight(firstSquareInput);
+           this.ChangeHighlight(secondSquareInput);
+        }, 300);
+
+        this.ChangeHighlight(firstSquareInput);
+        this.ChangeHighlight(secondSquareInput);
+
         //change JS data
         let tempVar = this.boardAr[firstSquareInput];
         this.boardAr[firstSquareInput] = this.boardAr[secondSquareInput];
@@ -299,7 +342,7 @@ export default class TwoPlayerSuperballBoard {
     
     endTurn() {
         if (!this.hasPlayerLost()) {
-            this.SpawnSquares();
+            setTimeout(() => {this.SpawnSquares()}, 300);
             this.computerTurn();
             return;
         }
@@ -313,8 +356,8 @@ export default class TwoPlayerSuperballBoard {
         }
     }
 
-    computerTurn() {
 
+    computerTurn() {
         let maxScore = Number.MIN_SAFE_INTEGER; // TODO: how to get lowest int value.
         let maxFirst = 0;
         let maxSecond = 0;
@@ -385,17 +428,8 @@ export default class TwoPlayerSuperballBoard {
             }
         }
 
-        this.SwapSquares(maxFirst, maxSecond);
-
-        // Update colors on screen.
-        //let tempSetting = this.colorArray[this.boardAr[maxFirst]];
-        //document.querySelector(`[data-number="${maxFirst}"]`).style.backgroundColor = this.colorArray[this.boardAr[maxSecond]];
-        //document.querySelector(`[data-number="${maxSecond}"]`).style.backgroundColor = tempSetting;
-
-        // Peform best move.
-        //temp = this.boardAr[maxFirst];
-        //this.boardAr[maxFirst] = this.boardAr[maxSecond];
-        //this.boardAr[maxSecond] = temp;
+        
+        this.computerSwapSquares(maxFirst, maxSecond);
 
         this.updateDisjSet();
 
