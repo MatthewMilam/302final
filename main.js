@@ -100,8 +100,8 @@ function SinglePlayerFunction() {
     overlay.style.opacity = 0;
 };
 
-board.SpawnSquares(); // spawns squares the first time // WHY IS THIS NEEDED? it should spawn squares in NewGame() but doens't...
-// What do you mean why is it needed, I can't find a time in main.js where NewGame() is called
+//Spawns the squares for the game when the user loads the page
+board.SpawnSquares(); 
 
 //Adds JavaScript event listeners which look for when the HTML button is clicked and execute code
 

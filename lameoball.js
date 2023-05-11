@@ -79,12 +79,11 @@ export default class SuperballBoard {
     }
     
     
-    // This function is called when 
+    // This function is called when a user clicks a cell
     SetSwap(id) {
-        //both not selected
+        // No cells have been selected
         if(this.firstSquare == -1 && this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.firstSquare = id;
-            //console.log(id);
             this.ChangeHighlight(this.firstSquare);
         }
         // Clicked a cell twice or second square is the same color as first square. Restarts swap process without spawning squares.
@@ -92,22 +91,25 @@ export default class SuperballBoard {
             this.ChangeHighlight(this.firstSquare);
             this.firstSquare = -1;
         }
-        //first square selected, second square not selected
+        // First square selected, second square not selected
         else if(this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.secondSquare = id;
-            // this.ChangeHighlight(this.firstSquare);
             this.highlightedID = -1;
+
+            // Spawns the squares, and resets the first and second selection
             this.SwapSquares(this.firstSquare, this.secondSquare);
             this.firstSquare = -1;
             this.secondSquare = -1;
 
+            // Checks if the game can continue, if it can then just spawn squares
             if (this.GameOver()) {
                 let overlay = document.getElementById("gameOverOverlay");
                 overlay.style.display = "flex"
+                
+                // Adds a transition for the overlay
                 setTimeout(function() {
                     overlay.style.opacity = "1";
                 }, 100);
-                // this.NewGame();
             }
             else {
                 this.SpawnSquares();
@@ -119,7 +121,7 @@ export default class SuperballBoard {
         }
     }
 
-    // Update Disjset is called everytime the turn ends (so at the end of spawnsquares()). 
+    // Update Disjset is called every time the turn ends (so at the end of spawnsquares()). 
     updateDisjSet() {
         delete this.disjSet;
         this.disjSet = new DisjointSet(80);
@@ -158,7 +160,9 @@ export default class SuperballBoard {
         this.filledSquares += numToSpawn;
     }
     
+    // Function to reset the game by resetting all the data, resetting the HTML, and adding the game over overlay
     NewGame() {
+        //Reset data
         this.emptySet.length = 0;
         this.filledSquares = 0;
         this.disjSet = new DisjointSet(80);
@@ -166,18 +170,20 @@ export default class SuperballBoard {
         //Reset Score
         this.score = 0;
         document.getElementById("scoreElement").innerHTML = this.score;
-
+        
+        //Reset HTML
         for(let i=0; i < 80; i++) {
             this.boardAr[i] = 0;
             this.emptySet.push(i);
             document.querySelector(`[data-number="${i}"]`).style.backgroundColor = this.colorArray[0];
         }
         
-
+        //Add game over overlay
         let overlay = document.getElementById("gameOverOverlay");
         overlay.style.display = "none"
         overlay.style.opacity = "0";
 
+        //Spawns squares for the next new game
         this.SpawnSquares();
     }
 
@@ -203,13 +209,12 @@ export default class SuperballBoard {
                 if (this.disjSet.find(i) == this.disjSet.find(this.firstSquare)) {
                     document.querySelector(`[data-number="${i}"`).style.backgroundColor =  "silver";
                     this.boardAr[i] = 0;
-                    this.emptySet.push(i); // Question: does emptySet need to be in order? Right now it wont be.
+                    this.emptySet.push(i); 
                     this.filledSquares--;
                     squaresRemoved++;
                 }
             }
             
-            // document.querySelector(`[data-number="${this.firstSquare}"]`).classList.remove("highlightedItem");
             this.ChangeHighlight(this.firstSquare);
             this.firstSquare = -1;
 
@@ -242,30 +247,22 @@ export default class SuperballBoard {
     }
 
     DisableButtons() {
-        // get all button elements on the page
+        // Get all button elements on the page
         const buttons = document.getElementsByTagName('button');
 
-        // loop through all the button elements and disable them
+        // Loop through all the button elements and disable them
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].disabled = true;
         }
     }
 
     EnableButtons() {
-        // get all button elements on the page
+        // Get all button elements on the page
         const buttons = document.getElementsByTagName('button');
 
-        // loop through all the button elements and disable them
+        // Loop through all the button elements and enable them
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].disabled = false;
-        }
-    }
-
-
-
-    ConsoleLogBoard() {
-        for(let i = 0; i < 79; i++) {
-            console.log(this.boardAr[i])
         }
     }
 }
