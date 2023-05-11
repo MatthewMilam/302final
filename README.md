@@ -39,3 +39,25 @@ Bryce Time Log:
 
 
 Matthew Time Log:
+ - March 4
+    2 hours: Meeting with Bryce, setting up github and starting files, planning project
+ - March 5
+    2 hours: Learning basics of Javascript / researching disjoint sets before starting project.
+ - March 27
+    30 minutes: Added goals and timeline for what each of us needs to get done.
+ - March 28
+    1 hour: Added class constructor for Superball board and implemented skeleton for collect() and spawnsquares().
+ - April 16
+    4 hours: Added disjoint sets class and implemented it into superball board class functions. Improved collect function.
+ - April 26
+    30 minutes: Added notes from TA's and debugged some.
+ - May 2
+    4 hours: Started implementation of 2 player version (skeleton code), made collect and spawn squares in 2 player code.
+ - May 7
+    5 hours: Small changes to 2player code, implemented half of hard AI code.
+ - May 8
+    4 hours: readme, 2 player debugging, wrote 2 player computer scoring function, made easy AI, adding 2 player delay, lots of small debugging.
+ - May 9
+    1 hours: commenting javascript files, last debugging
+ - May 11
+    1 hour: commenting, time logging
