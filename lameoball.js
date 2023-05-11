@@ -174,7 +174,6 @@ export default class SuperballBoard {
         this.updateDisjSet();
         this.filledSquares += numToSpawn;
 
-        console.log(this.filledSquares);
     }
     
     // Function to reset the game by resetting all the data, resetting the HTML, and adding the game over overlay
