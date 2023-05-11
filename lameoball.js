@@ -103,9 +103,6 @@ export default class SuperballBoard {
 
             this.SpawnSquares();        
         }
-        else {
-            console.log("Give a warning message to user");
-        }
     }
 
     // Update Disjset is called every time the turn ends (so at the end of spawnsquares()).

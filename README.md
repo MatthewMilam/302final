@@ -9,8 +9,7 @@ move any tiles except those in the other's scoring zone, and can only collect in
 spawn on each half of the board, instead of 5 randomly, and the goal is to score more points than your opponent
 before your side of the board fills up. Once a player's side fills up, the other player can keep playing on his side
 until that fills up. The player with more points scored wins (this is implemented by the score increasing when the 
-player scores and the score decreasing when the AI scores. A positive score means you won). Also a small change is that
-neithe player can swap with an empty cell (to make it more strategic).
+player scores and the score decreasing when the AI scores. A positive score means you won).
 
 Bryce Time Log:
  - Mar 4

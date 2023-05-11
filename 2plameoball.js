@@ -17,6 +17,7 @@ function displayWarningMessage(message) {
     }, 1000);
 }
 
+
 export default class TwoPlayerSuperballBoard {
     // One main difference is that the parameter diff is used for 2-player version to denote the difficulty.
     // 0 is easy and 1 is hard mode.
@@ -61,7 +62,7 @@ export default class TwoPlayerSuperballBoard {
         const originalColor = getComputedStyle(element).backgroundColor;
         const colorArr = originalColor.substring(4, originalColor.length - 1).split(",").map(n => parseInt(n, 10));
         const [r, g, b] = colorArr;
-        //console.log("highlightedID", this.highlightedID);
+        
         if(this.highlightedID == -1) {
             this.highlightedID = id;
             const darkerColor = `rgb(${Math.max(r - 100, 0)}, ${Math.max(g - 100, 0)}, ${Math.max(b - 100, 0)})`;
@@ -139,11 +140,10 @@ export default class TwoPlayerSuperballBoard {
         //both not selected
         else if(this.firstSquare == -1 && this.secondSquare == -1 && this.boardAr[id] != 0) {
             this.firstSquare = id;
-            //console.log(id);
             this.ChangeHighlight(this.firstSquare);
         }
-        // Clicked a cell twice or second square is the same color as first square. Restarts swap process without spawning squares.
-        else if((id == this.firstSquare)){
+        // Clicked a cell twice. Restarts swap process without spawning squares.
+        else if(id == this.firstSquare){
             this.ChangeHighlight(this.firstSquare);
             this.firstSquare = -1;
         }
@@ -157,9 +157,6 @@ export default class TwoPlayerSuperballBoard {
             this.secondSquare = -1;
 
             this.endTurn();        
-        }
-        else {
-            console.log("Give a warning message to user");
         }
     }
 
@@ -201,7 +198,6 @@ export default class TwoPlayerSuperballBoard {
             this.boardAr[this.emptySetL[intPos]] = randomColor;
             // TODO: remove intPos indexed element from emptySet array
 
-            console.log("Spawned on left: " + this.emptySetL[intPos] + " " + this.colorArray[randomColor]);
             this.emptySetL.splice(intPos, 1);
         }
     
@@ -220,7 +216,6 @@ export default class TwoPlayerSuperballBoard {
             // TODO: remove intPos indexed element from emptySet array
 
 
-            console.log("Spawned on right: " + this.emptySetR[intPos] + " " + this.colorArray[randomColor]);
             this.emptySetR.splice(intPos, 1);
         }
     
@@ -345,7 +340,6 @@ export default class TwoPlayerSuperballBoard {
             while (!this.hasComputerLost() && this.score > -1) {
                 setTimeout(() => {this.SpawnSquares()}, 300);
                 setTimeout(() => {this.computerTurn()}, 500);
-                console.out("comp move");
             }
 
             let overlay = document.getElementById("gameOverOverlay");
@@ -439,8 +433,6 @@ export default class TwoPlayerSuperballBoard {
         setTimeout(() => {this.SwapSquares(maxFirst, maxSecond)}, 500);
 
         this.updateDisjSet();
-
-        console.log("Move " + maxFirst + " and " + maxSecond + " with score " + maxScore + " (diff " + this.diff);
 
     }
 
