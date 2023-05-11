@@ -101,51 +101,54 @@ export default class SuperballBoard {
             this.firstSquare = -1;
             this.secondSquare = -1;
 
-            // Checks if the game can continue, if it can then just spawn squares
-            if (this.GameOver()) {
-                let overlay = document.getElementById("gameOverOverlay");
-                overlay.style.display = "flex"
-                
-                // Adds a transition for the overlay
-                setTimeout(function() {
-                    overlay.style.opacity = "1";
-                }, 100);
-            }
-            else {
-                this.SpawnSquares();
-            }
-        
+            this.SpawnSquares();        
         }
         else {
             console.log("Give a warning message to user");
         }
     }
 
-    // Update Disjset is called every time the turn ends (so at the end of spawnsquares()). 
+    // Update Disjset is called every time the turn ends (so at the end of spawnsquares()).
+    // It deletes the old disjoint set and recreates it to update the values and sizes.
     updateDisjSet() {
         delete this.disjSet;
         this.disjSet = new DisjointSet(80);
+
+        // At this point, there is a new disjoint set with all single nodes pointing to themselves. To update it,
+        // these loops iterate through the board. If the square to the right or below the current square has the same
+        // color, their disjoint sets are unioned.
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 10; j++) {
-                if (document.querySelector(`[data-number="${(i*10) + j}"]`).style.backgroundColor != "") {
-                    // Check right cell.
+                // First if-statement checks if the square is not an empty cell.
+                if (this.disjSet.find((i*10) + j) != 0) {
+                    // To check the cell to the right, the current cell cannot be on the far right column (j != 9)
+                    // and they cannot already be in the same disjoint set (parents cannot be the same) and
+                    // they have to be the same color.
                     if (j != 9 && this.disjSet.find((i*10) + j) != this.disjSet.find((i*10) + j + 1)
                     && this.boardAr[(i*10) + j] == this.boardAr[(i*10) + j+1]) {
-                            this.disjSet.Union((i*10) + j, (i*10) + j + 1);
+                        // Unions the squares.
+                        this.disjSet.Union((i*10) + j, (i*10) + j + 1);
                     }
-                    // Check below
+                    // Check tile below (similar logic as above but cannot be last row (i != 7).
                     if (i < 7 && this.disjSet.find((i*10) + j) != this.disjSet.find(((i+1)*10) + j) 
                     && this.boardAr[(i*10) + j] == this.boardAr[((i+1) * 10) +j]) {
-                            this.disjSet.Union((i*10) + j, ((i+1)*10) + j);
+                        // Unions squares
+                        this.disjSet.Union((i*10) + j, ((i+1)*10) + j);
                     }
                 }
             }
         }
     }
     
+
     SpawnSquares() {
+        // To spawn squares, it starts with 5 squares. If there is fewer than 5 empty spaces, the number to spawn is decreased.
         let numToSpawn = 5;
         if (this.filledSquares > 75) numToSpawn = 80 - this.filledSquares;
+
+        // This loop repeats for each new tile. It picks a random index from teh emptySet array. It also chooses
+        // a random color. It then updates this empty tile to be filled by a color, updates the board array,
+        // and removes the tile from the emptySet array.
         for(let i=0; i < numToSpawn; i++) {
             const intPos = Math.floor(Math.random() * this.emptySet.length);
             const randomColor = Math.floor(Math.random() * 5) + 1;
@@ -154,10 +157,24 @@ export default class SuperballBoard {
             // TODO: remove intPos indexed element from emptySet array
             this.emptySet.splice(intPos, 1);
         }
+
+        if (numToSpawn != 5) {
+            let overlay = document.getElementById("gameOverOverlay");
+            overlay.style.display = "flex"
+                
+            // Adds a transition for the overlay
+            setTimeout(function() {
+                overlay.style.opacity = "1";
+            }, 100);
+        }
     
+        // The first square selection is reset in case the player had that selected, and the disjoint set is updated with
+        // the new value and the number of filled squares is incremented.
         this.firstSquare = -1;
         this.updateDisjSet();
         this.filledSquares += numToSpawn;
+
+        console.log(this.filledSquares);
     }
     
     // Function to reset the game by resetting all the data, resetting the HTML, and adding the game over overlay
@@ -206,7 +223,10 @@ export default class SuperballBoard {
             let scoreMultiplier = this.scoreArray[this.boardAr[this.firstSquare]];
             let squaresRemoved = 0;
             for (let i = 0; i < 80; i++) {
+                // Checks for any squares whose parent tile is the same as the parent of the square collected.
                 if (this.disjSet.find(i) == this.disjSet.find(this.firstSquare)) {
+
+                    // Color is removed, arrays and values updated.
                     document.querySelector(`[data-number="${i}"`).style.backgroundColor =  "silver";
                     this.boardAr[i] = 0;
                     this.emptySet.push(i); 
@@ -215,6 +235,7 @@ export default class SuperballBoard {
                 }
             }
             
+            // Highlight is removed from the scored cell and selected square is no longer selected.
             this.ChangeHighlight(this.firstSquare);
             this.firstSquare = -1;
 
@@ -227,6 +248,7 @@ export default class SuperballBoard {
             //change score variable
             document.getElementById("scoreElement").innerHTML = this.score;
         }
+        // These are warning messages in case the player does not know the rules.
         else if (this.firstSquare == -1){
             displayWarningMessage("No square has been selected to score.");
         }
@@ -237,13 +259,6 @@ export default class SuperballBoard {
             displayWarningMessage("Size of disjoint set is less than 5.")
         }
     
-    }
-    
-    GameOver() {
-        if(this.filledSquares > 75) {
-            return true;
-        }
-        return false;
     }
 
     DisableButtons() {

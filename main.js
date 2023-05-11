@@ -6,7 +6,6 @@ import TwoPlayerSuperballBoard from './2plameoball.js';
 import SuperballBoard, * as boardFile from './lameoball.js';
 
 let board = new SuperballBoard();
-// let board = new TwoPlayerSuperballBoard(0);
 
 // Colors: White(1), Purple(2), Blue(3), Yellow(4), Red(5), Green(6)
 // Gets the single cell in the HTML, then clones it to create the board
