@@ -22,17 +22,16 @@ function displayWarningMessage(message) {
 export default class SuperballBoard {
     constructor() {
         this.disjSet = new DisjointSet(80);
-
         this.boardAr = [];      // The board array holds values 0 to 5 which keeps track of the color in that square.
-        this.emptySet = [];     // Emptyset is an array holding all indicies of squares that are empty.
-        this.filledSquares = 0;
-        this.mss = 5;
-        this.score = 0;
+        this.emptySet = [];     // Empty set is an array holding all indices of squares that are empty.
+        this.filledSquares = 0; // Array to hold how many squares have been filled 
+        this.mss = 5;           // Number to hold the minimum scoring size
+        this.score = 0;         // Number to hold the score of the game
         this.colorArray = ["silver", "darkorchid", "aqua", "yellow", "crimson", "chartreuse"]; // Colors of each boardAr value.
         this.scoreArray = [0, 2, 3, 4, 5, 6];   // Holds the score bonuses of each color.
-        this.firstSquare = -1;  
-        this.secondSquare = -1;     // These two hold the index that has been selected by the user to swap.
-        this.highlightedID = -1;
+        this.firstSquare = -1;  // These two hold the index that has been selected by the user to swap.
+        this.secondSquare = -1; //    
+        this.highlightedID = -1;// Holds the number of the cell thats being highlighted
 
         // To start the game, emptySet holds all values 0-79 since all squares are empty, and the boardArray is filled
         // with zeros.
@@ -96,11 +95,12 @@ export default class SuperballBoard {
             this.secondSquare = id;
             this.highlightedID = -1;
 
-            // Spawns the squares, and resets the first and second selection
+            // Swaps the squares, and resets the first and second selection
             this.SwapSquares(this.firstSquare, this.secondSquare);
             this.firstSquare = -1;
             this.secondSquare = -1;
 
+            // Spawn squares since a move has been made
             this.SpawnSquares();        
         }
     }
@@ -151,10 +151,10 @@ export default class SuperballBoard {
             const randomColor = Math.floor(Math.random() * 5) + 1;
             document.querySelector(`[data-number="${this.emptySet[intPos]}"`).style.backgroundColor = this.colorArray[randomColor];
             this.boardAr[this.emptySet[intPos]] = randomColor;
-            // TODO: remove intPos indexed element from emptySet array
             this.emptySet.splice(intPos, 1);
         }
 
+        // If it can't spawn the square, add the Game Over overlay
         if (numToSpawn != 5) {
             let overlay = document.getElementById("gameOverOverlay");
             overlay.style.display = "flex"
@@ -209,7 +209,7 @@ export default class SuperballBoard {
         return false;
     }
     
-    // This function is called when the user clicks the collect buton. To work, it must be called when the player
+    // This function is called when the user clicks the collect button. To work, it must be called when the player
     // has previously selected a square in a goal cell, and the size of the square's cluster is >= 5. It will then
     // remove all square in that cluster and give the player points for the score.
     Collect() {
@@ -241,7 +241,7 @@ export default class SuperballBoard {
             // Increment score:
             this.score += scoreMultiplier * squaresRemoved;
              
-            //change score variable
+            // Change score variable
             document.getElementById("scoreElement").innerHTML = this.score;
         }
         // These are warning messages in case the player does not know the rules.

@@ -1,3 +1,5 @@
+<!-- HTML file which contains the structure of the code, and links the CSS/JS. No data for the game is actually stored in the HTML file, 
+    as its purely for visuals. -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,11 +29,11 @@
         </div>
         <!-- The HTML has hidden elements which are set to not display until the user is navigating a menu or lost the game -->
         <div class="gridContainer">
-            <div class="overlay" id="ChangeGameButton">
+            <div class="overlay" id="ChangeGameButton" style="flex-direction: row;">
                 <button class="buttonContainer" id="SinglePlayerButton">Single Player</button>
                 <button class="buttonContainer" id="TwoPlayerButton">Two Player</button>
             </div>
-            <div class="overlay" id="ChangeDifficultyButton">
+            <div class="overlay" id="ChangeDifficultyButton" style="flex-direction: row;">
                 <button class="buttonContainer" id="TPEasyButton">Easy</button>
                 <button class="buttonContainer" id="TPHardButton">Hard</button>
             </div>

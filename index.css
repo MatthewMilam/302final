@@ -1,3 +1,6 @@
+/* CSS file which adds all of the styling to the webpage. Things like arrangement, color, size, and positioning are done in this file. The different classes
+go in order of how they appear so for example the header container has its code put first, while the footer container has its code near the bottom. */
+
 body {
 	margin: 0;
 	padding: 0;
@@ -119,7 +122,7 @@ p {
 	transition: opacity 0.5s;
 	justify-content: center;
 	align-items: center;
-	flex-direction: row;
+	flex-direction: column;
 	position: absolute;
 	top: 0;
 	left: 0;
